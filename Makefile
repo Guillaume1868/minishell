@@ -26,7 +26,7 @@ objs/%.o: src/%.c
 $(NAME): $(OBJ)
 	@printf "$(_INFO) Preparing libft\n"
 	@$(MAKE) bonus -C ./libft
-	@$(CC) $(OBJ) ./libft/libft.a $(INC) -o $(NAME)
+	@$(CC) $(OBJ) ./libft/libft.a $(INC) -o $(NAME) -lreadline -L $(HOME)/.brew/Cellar/readline/8.1.2/lib
 	@printf "$(_SUCCESS) $(NAME) ready.\n"
 
 clean:

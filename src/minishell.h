@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 13:05:44 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:00:37 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,7 @@
 
 # include <unistd.h>
 # include "../libft/libft.h"
+# include <readline/readline.h>
+# include <readline/history.h>
 
 #endif
