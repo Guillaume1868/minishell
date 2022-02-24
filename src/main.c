@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 15:56:37 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/02/24 18:05:48 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ void	handle_signals(int signo)
 	}
 }
 
+void	disp_next_prompt(char **line)
+{
+	free(*line);
+	*line = readline ("$>");
+}
+
 int	main(void)
 {
 	char	*line;
@@ -36,11 +42,8 @@ int	main(void)
 	{
 		add_history(line);
 		printf("%s\n", line);
-		if (ft_strncmp("exit", line, 4) == 0)
-		{
+		if (ft_strncmp("exit", line, 5) == 0)
 			exit(0);
-		}
-		free(line);
-		line = readline ("$>");
+		disp_next_prompt(&line);
 	}
 }

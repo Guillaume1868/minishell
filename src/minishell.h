@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 16:58:44 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/02/24 18:00:17 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@
 
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);
-typedef struct s_shell {
+/*typedef struct s_shell {
 	pid_t	id;
 	t_shell	*previous;
 	t_shell	*next;
-}				t_shell;
+}				t_shell;*/
 
 #endif
