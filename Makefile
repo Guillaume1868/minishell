@@ -1,4 +1,4 @@
-NAME 	=	push_swap
+NAME 	=	minishell
 
 FILES	=	main
 
@@ -27,7 +27,7 @@ $(NAME): $(OBJ)
 	@printf "$(_INFO) Preparing libft\n"
 	@$(MAKE) bonus -C ./libft
 	@$(CC) $(OBJ) ./libft/libft.a $(INC) -o $(NAME)
-	@printf "$(_SUCCESS) push_swap ready.\n"
+	@printf "$(_SUCCESS) $(NAME) ready.\n"
 
 clean:
 	@ $(RM) $(OBJ)
