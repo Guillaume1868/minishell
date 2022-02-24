@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   builtin.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 16:20:17 by gaubert          ###   ########.fr       */
+/*   Created: 2022/02/24 15:42:38 by gaubert           #+#    #+#             */
+/*   Updated: 2022/02/24 16:52:53 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef BUILTIN_H
+# define BUILTIN_H
 
-# include <unistd.h>
-# include "builtin.h"
-# include "../libft/libft.h"
-# include <readline/readline.h>
-# include <readline/history.h>
-
-typedef struct s_shell {
-	pid_t	id;
-	t_shell	*previous;
-	t_shell	*next;
-}				t_shell;
+int	lsh_cd(char **args);
+int	lsh_help(void);
+int	lsh_exit(void);
 
 #endif
