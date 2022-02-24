@@ -21,23 +21,17 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-<<<<<<< HEAD
-=======
 # include <unistd.h>
 # include "builtin.h"
 # include "../libft/libft.h"
->>>>>>> a81d739fa62ad0385f2bfe516f8a8abec8ab803e
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include "../libft/libft.h"
 
-<<<<<<< HEAD
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);
-#endif
-=======
 typedef struct s_shell {
 	pid_t	id;
 	t_shell	*previous;
@@ -45,4 +39,3 @@ typedef struct s_shell {
 }				t_shell;
 
 #endif
->>>>>>> a81d739fa62ad0385f2bfe516f8a8abec8ab803e
