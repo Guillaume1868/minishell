@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 13:06:47 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/02/24 14:34:59 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,14 @@
 
 int	main(void)
 {
-	ft_putstr_fd("hello world\n", 1);
+	char	*line;
+
+	line = readline ("$>");
+	while (line != NULL)
+	{
+		add_history(line);
+		printf("%s\n", line);
+		free(line);
+		line = readline ("$>");
+	}
 }
