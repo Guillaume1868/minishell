@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 18:00:17 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/01 11:23:29 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,13 @@
 # include "../libft/libft.h"
 
 // wtf ?
-void			rl_replace_line(const char *fuck, int c);
-/*typedef struct s_shell {
-	pid_t	id;
-	t_shell	*previous;
-	t_shell	*next;
-}				t_shell;*/
+void	rl_replace_line(const char *fuck, int c);
+void	check_prompt(char *line);
+
+typedef struct s_shell {
+	pid_t			id;
+	struct s_shell	*previous;
+	struct s_shell	*next;
+}				t_shell;
 
 #endif
