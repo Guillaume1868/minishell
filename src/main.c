@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/01 12:18:13 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/01 12:43:59 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ void	handle_signals(int signo)
 	{
 		rl_on_new_line();
 		rl_redisplay();
+	}
+}
+
+void	pwd(void)
+{
+	char	dir[PATH_MAX];
+
+	if (getcwd(dir, sizeof(dir)) != NULL)
+	{
+		printf("Current working dir: %s\n", dir);
+	}
+	else
+	{
+		perror("pwd() error");
 	}
 }
 
@@ -51,9 +65,9 @@ int	main(void)
 		if (ft_strncmp("exit", line, 5) == 0)
 			exit(0);
 		if (ft_strncmp("$", line, 1) == 0)
-		{
 			env(line + 1);
-		}
+		if (ft_strncmp("pwd", line, 4) == 0)
+			pwd();
 		disp_next_prompt(&line);
 	}
 }
