@@ -1,6 +1,6 @@
 NAME 	=	minishell
 
-FILES	=	main builtin
+FILES	=	main builtin env
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
