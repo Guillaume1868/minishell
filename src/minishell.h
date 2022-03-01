@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/02/24 18:00:17 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/01 12:19:03 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,8 @@ void			rl_replace_line(const char *fuck, int c);
 	t_shell	*previous;
 	t_shell	*next;
 }				t_shell;*/
+
+//env.c
+void			env(char *var);
 
 #endif

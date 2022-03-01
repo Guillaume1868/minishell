@@ -1,11 +1,11 @@
 NAME 	=	minishell
 
-FILES	=	main
+FILES	=	main env
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
-#INC		=	-I. -I./libft -I$(HOME)/.brew/opt/readline/include -lreadline -L$(HOME)/.brew/opt/readline/lib
-INC		=	-I. -I./libft -I/opt/homebrew/opt/readline/include -lreadline -L/opt/homebrew/opt/readline/lib
+INC		=	-I. -I./libft -I$(HOME)/.brew/opt/readline/include -lreadline -L$(HOME)/.brew/opt/readline/lib
+#INC		=	-I. -I./libft -I/opt/homebrew/opt/readline/include -lreadline -L/opt/homebrew/opt/readline/lib
 CC		=	gcc
 
 RM		=	rm -f
