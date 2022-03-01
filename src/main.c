@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/01 15:37:52 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/01 15:39:01 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,26 @@ void	disp_next_prompt(char **line)
 	*line = readline ("$>");
 }
 
+void	ft_echo(char *argument)
+{
+	int	i;
+
+	i = 0;
+	if (!(argument[0] == '-' && argument[1] == 'n'))
+	{
+		while (argument[i] == ' ')
+			i++;
+		printf("%s\n", &argument[0]);
+	}
+	else
+	{
+		i += 2;
+		while (argument[i] == ' ')
+			i++;
+		printf("%s", &argument[i]);
+	}
+}
+
 void	check_prompt(char *line, char **envp)
 {
 	int		i;
@@ -69,6 +89,8 @@ void	check_prompt(char *line, char **envp)
 			ft_exit();
 		else if (ft_strncmp(line, "help", i) == 0)
 			ft_help();
+		else if (ft_strncmp(line, "echo", i) == 0)
+			ft_echo(argument);
 		else if (line[0] != '\0')
 			printf("minishell: %s command not found\n", line);
 	}
