@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/02 11:00:43 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/02 12:58:41 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 # include <readline/history.h>
 # include <stdlib.h>
 # include <limits.h>
+# include <stdio.h>
+# include <sys/types.h>
+# include <dirent.h>
+# include <errno.h>
 
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);
@@ -35,5 +39,8 @@ typedef struct s_shell {
 
 //env.c
 char			*get_env(char *name, char **envp);
+
+//find_exe.c
+void			get_executable_path(char *name, char **envp);
 
 #endif

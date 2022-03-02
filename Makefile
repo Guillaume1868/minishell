@@ -1,6 +1,6 @@
 NAME 	=	minishell
 
-FILES	=	main builtin env
+FILES	=	main builtin env find_exe
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
@@ -20,7 +20,7 @@ all:	header $(NAME)
 
 objs/%.o: src/%.c
 	@mkdir -p $(dir $@)
-	@$(CC) -Wall -Wextra -Werror  -c $< -o $@
+	@$(CC) -Wall -Wextra -Werror -g -c $< -o $@
 	@printf "$(_INFO) OBJ $@ compiled.\n"
 
 $(NAME): $(OBJ)
