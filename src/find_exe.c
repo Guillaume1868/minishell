@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 11:41:07 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/02 14:14:21 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/02 14:39:25 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ static char	*find_executable(char *name, char *path)
 	return (NULL);
 }
 
-void	get_executable_path(char *name, char **envp)
+char	*get_executable_path(char *name, char **envp)
 {
 	int		i;
 	char	**path;
@@ -101,10 +101,8 @@ void	get_executable_path(char *name, char **envp)
 		ret = find_executable(name, path[i]);
 		free(path[i]);
 		if (ret)
-		{
-			printf("%s", ret);
-			free(ret);
-		}
+			return (ret);
 	}
 	free(path);
+	return (NULL);
 }

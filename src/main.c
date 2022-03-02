@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/02 10:54:36 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/02 14:40:58 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	check_prompt(char *line, char **envp)
 {
 	int		i;
 	char	*argument;
+	char	*path;
 
 	i = 0;
 	while (line[i] != ' ' && line[i] != '\0')
@@ -89,13 +90,22 @@ void	check_prompt(char *line, char **envp)
 	else if (ft_strncmp(line, "echo", i) == 0)
 		ft_echo(argument);
 	else if (ft_strncmp(line, "$", 1) == 0)
-		env(line + 1);
+		printf("%s\n", get_env(line + 1, envp));
 	else if (ft_strncmp(line, "env", i) == 0)
 		ft_env(envp);
 	else if (ft_strncmp(line, "pwd", i) == 0)
 		pwd();
 	else if (line[0] != '\0')
-		printf("minishell: %s command not found\n", line);
+	{
+		path = get_executable_path(&line[0], envp);
+		if (path)
+		{
+			printf("%s\n", path);
+		}
+		else
+			printf("minishell: %s command not found\n", line);
+		free(path);
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
