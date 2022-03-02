@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/01 15:15:59 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/02 10:55:32 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ typedef struct s_shell {
 }				t_shell;
 
 //env.c
-void			env(char *var);
+char			*get_env(char *name, char **envp);
 
 #endif

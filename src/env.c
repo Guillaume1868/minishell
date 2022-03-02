@@ -6,20 +6,24 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 12:18:03 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/01 12:54:19 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/02 10:56:39 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	env(char *var)
+char	*get_env(char *name, char **envp)
 {
-	char	*res;
+	int	i;
+	int	name_len;
 
-	printf("search env '%s'\n", var);
-	res = getenv(var);
-	if (res != NULL)
-		printf("%s=%s\n", var, res);
-	else
-		printf("env %s not found\n", var);
+	i = 0;
+	name_len = ft_strlen(name);
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(name, envp[i], name_len) == 0)
+			return (&envp[i][name_len + 1]);
+		i++;
+	}
+	return (NULL);
 }
