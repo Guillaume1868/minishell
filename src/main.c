@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/02 14:40:58 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/04 17:38:02 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,118 @@ void	check_prompt(char *line, char **envp)
 	}
 }
 
+static int	quotes(char c, char *quote)
+{
+	if (*quote == '0' && (c == '\'' || c == '\"'))
+		*quote = c;
+	else if (*quote != '0' && c == *quote)
+	{
+		*quote = '0';
+		return(0);
+	}
+	return (1);
+}
+
+char *make_cmd(char *start, char *end)
+{
+	char	quote;
+	int		i;
+	char	*res;
+	int		count;
+
+	//printf("\nmaking command:\n");
+	quote = '0';
+	i = -1;
+	count = 0;
+	while (start + ++i <= end)
+	{
+		quotes(*(start + i), &quote);
+		if (*(start + i) != quote)
+			count++;
+		//printf("%c", *(start + i));
+	}
+	res = ft_calloc(sizeof(char), count + 1);
+	i = -1;
+	count = -1;
+	quote = '0';
+	while (start + ++i <= end)
+	{
+		//quotes(*(start + i), &quote);
+		if (quotes(*(start + i), &quote) && *(start + i) != quote)
+			res[++count] = start[i];
+	}
+	//printf("\n------------\n");
+	printf("res=|%s|\n", res);
+	return (res);
+}
+
+t_cmd	*parse(char *line, char **envp)
+{
+	t_cmd	*res;
+	int		i;
+	char	quote = '0';
+	char	*start, *end;
+
+	(void)envp;
+	(void)res;
+	i = 0;
+	res = (void *)ft_calloc(1, sizeof(t_cmd));
+	while (line[i])
+	{
+		//printf("|%s|\n", &line[i]);
+		quotes(line[i], &quote);
+		//printf("quote:%c reading:%c\n", quote, line[i]);
+		if (quote == '0' && (line[i] == '<' || line[i] == '>'))
+		{
+			//printf("==================\nin a redirector\n");
+			if (line[i] == '<')
+			{
+				i++;
+				if (line[i + 1] == '<')
+				{
+					printf("<<\n");
+i++;
+				}
+				else
+					printf("<\n");
+			}
+			else if (line[i] == '>')
+			{
+				i++;
+				if (line[i + 1] == '>')
+				{
+i++;
+					printf(">>\n");
+				}
+				else
+					printf(">\n");
+			}
+		}
+		else if (line[i] != ' ')
+		{
+			//printf("==================\nin a command\n");
+			start = &line[i];
+			while (line[i] != 0 && !(line[i] == ' ' && quote == '0'))
+			{
+				//printf("%c", line[i]);
+				i++;
+				quotes(line[i], &quote);
+			}
+			end = &line[i - 1];
+			res->name = make_cmd(start, end);
+			//printf("\n==================\ncommand finished\n");
+		}
+		else
+			i++;
+	}
+	//return (&res);
+	return(NULL);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
+	t_cmd	*cmd;
 
 	(void)argc;
 	(void)argv;
@@ -124,9 +233,11 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != '\0')
 		{
 			add_history(line);
-			check_prompt(line, envp);
+			//check_prompt(line, envp);
+			cmd = parse(line, envp);
 		}
 		//printf("%s\n", line);
 		disp_next_prompt(&line);
 	}
+	//redire a vbotev si jarrive a print le exit
 }
