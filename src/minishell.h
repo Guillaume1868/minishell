@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/03 13:18:30 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 09:47:09 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,13 @@ char			*get_env(char *name, char **envp);
 
 //find_exe.c
 char			*get_executable_path(char *name, char **envp);
+
+//parse_utils.c
+int				is_seperator(char c);
+char			*malloc_word(char *start, char *end);
+int				quotes(char c, char *quote);
+
+//parse.c
+t_cmd			*parse(char *line, char **envp);
 
 #endif
