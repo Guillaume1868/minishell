@@ -46,15 +46,18 @@ t_list	*parse(char *line, char **envp)
 		if (quote == '0' && line[i] == ';')
 		{
 			i++;
-			printf(";\n");
 			cmd = (void *)ft_calloc(1, sizeof(t_cmd));
+			cmd->pipe_from_prec = 0;
 			ft_lstadd_back(&c, ft_lstnew(cmd));
 			p.res = cmd;
 		}
 		else if (quote == '0' && line[i] == '|')
 		{
 			i++;
-			printf("|\n");
+			cmd = (void *)ft_calloc(1, sizeof(t_cmd));
+			cmd->pipe_from_prec = 1;
+			ft_lstadd_back(&c, ft_lstnew(cmd));
+			p.res = cmd;
 		}
 		else if (quote == '0' && (line[i] == '<' || line[i] == '>'))
 		{

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 12:59:11 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 13:51:36 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,15 @@
 # include <dirent.h>
 # include <errno.h>
 
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
 enum e_type{out, append_out, in, delim_in};
 
 
@@ -42,8 +51,7 @@ typedef struct s_cmd
 	t_list			*args;
 	t_list			*in_redir;
 	t_list			*out_redir;
-	struct s_cmd	*next;
-	struct s_cmd	*prev;
+	int				pipe_from_prec;
 }	t_cmd;
 
 typedef struct s_params

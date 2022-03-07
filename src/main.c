@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 13:04:42 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 14:01:25 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,27 +109,39 @@ void	check_prompt(char *line, char **envp)
 }
 void	printff(void *arg)
 {
-	printf("%s\n", (char *)arg);
+	printf("- %s\n", (char *)arg);
 }
 
 void	printredir(void *arg)
 {
-	t_redir *tmp = arg;
-	printf("|%s| type=%d\n",tmp->str, tmp->type);
+	t_redir	*tmp;
+
+	tmp = arg;
+	printf("|%s| type=%d\n", tmp->str, tmp->type);
 }
 
 void	printcmd(void *param)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	cmd = param;
+	if (cmd->pipe_from_prec)
+		printf("==========\n%sPIPED command:%s\n", KRED, KNRM);
+	else
+		printf("==========\n%scommand:%s\n", KYEL, KNRM);
 	printff(cmd->name);
+	if (cmd->args)
+		printf("args:\n");
 	ft_lstiter(cmd->args, printff);
-	printf("in redirs\n");
+	if (cmd->in_redir)
+		printf("in redirs:\n");
 	ft_lstiter(cmd->in_redir, printredir);
-	printf("out redirs\n");
+	if (cmd->out_redir)
+		printf("out redirs:\n");
 	ft_lstiter(cmd->out_redir, printredir);
+	printf("==========\n");
 }
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
@@ -147,12 +159,9 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] != '\0')
 		{
 			add_history(line);
-			//check_prompt(line, envp);
 			cmd_lst = parse(line, envp);
 			ft_lstiter(cmd_lst, printcmd);
-
 		}
-		//printf("%s\n", line);
 		disp_next_prompt(&line);
 	}
 	//redire a vbotev si jarrive a print le exit
