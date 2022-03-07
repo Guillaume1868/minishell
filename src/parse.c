@@ -1,16 +1,45 @@
 #include "minishell.h"
 
-t_cmd	*parse(char *line, char **envp)
+void	skip_space(char *str, int *i)
 {
-	t_cmd	*res;
-	int		i;
-	char	quote = '0';
-	char	*start, *end;
+	while(str[*i] == ' ')
+		*i = *i + 1;
+}
+
+void	save_redir(t_params p, enum e_type type, int in_mode)
+{
+	t_redir	*tmp;
+
+	if (type == append_out || type == delim_in)
+		*p.i = *p.i + 2;
+	else
+		*p.i = *p.i + 1;
+	skip_space(p.line, p.i);
+	tmp = malloc(sizeof(t_redir));
+	tmp->str = get_word(p.line, p.i, p.quote);
+	tmp->type = type;
+	if (in_mode)
+		ft_lstadd_back(&p.res->in_redir, ft_lstnew(tmp));
+	else
+		ft_lstadd_back(&p.res->out_redir, ft_lstnew(tmp));
+}
+
+t_list	*parse(char *line, char **envp)
+{
+	t_list		*c;
+	t_cmd		*cmd;
+	int			i;
+	char		quote = '0';
+	t_params	p;
 
 	(void)envp;
-	(void)res;
 	i = 0;
-	res = (void *)ft_calloc(1, sizeof(t_cmd));
+	cmd = (void *)ft_calloc(1, sizeof(t_cmd));
+	ft_lstadd_back(&c, ft_lstnew(cmd));
+	p.i = &i;
+	p.line = line;
+	p.quote = &quote;
+	p.res = cmd;
 	while (line[i])
 	{
 		quotes(line[i], &quote);
@@ -18,6 +47,9 @@ t_cmd	*parse(char *line, char **envp)
 		{
 			i++;
 			printf(";\n");
+			cmd = (void *)ft_calloc(1, sizeof(t_cmd));
+			ft_lstadd_back(&c, ft_lstnew(cmd));
+			p.res = cmd;
 		}
 		else if (quote == '0' && line[i] == '|')
 		{
@@ -27,39 +59,25 @@ t_cmd	*parse(char *line, char **envp)
 		else if (quote == '0' && (line[i] == '<' || line[i] == '>'))
 		{
 			if (line[i] == '<' && line[i + 1] == '<')
-			{
-				i += 2;
-				printf("<<\n");
-			}
+				save_redir(p, delim_in, 1);
 			else if (line[i] == '<')
-			{
-				i++;
-				printf("<\n");
-			}
+				save_redir(p, in, 1);
 			else if (line[i] == '>' && line[i + 1] == '>')
-			{
-				i += 2;
-				printf(">>\n");
-			}
+				save_redir(p, append_out, 0);
 			else if (line[i] == '>')
-			{
-				i++;
-				printf(">\n");
-			}
+				save_redir(p, out, 0);
 		}
 		else if (line[i] != ' ')	//command
 		{
-			start = &line[i];
-			while (line[i] != 0 && !(is_seperator(line[i]) && quote == '0'))
+			if (cmd->name == NULL)
+				cmd->name = get_word(line, &i, &quote);
+			else
 			{
-				i++;
-				quotes(line[i], &quote);
+				ft_lstadd_back(&cmd->args, ft_lstnew(get_word(line, &i, &quote)));
 			}
-			end = &line[i - 1];
-			res->name = malloc_word(start, end);
 		}
 		else
 			i++;
 	}
-	return (res);
+	return (c);
 }

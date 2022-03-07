@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 09:47:09 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 12:59:11 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,32 @@
 
 enum e_type{out, append_out, in, delim_in};
 
+
 typedef struct s_redir
 {
 	int					type;
 	char				*str;
 	int					fd;
-	struct s_redir		*next;
-	struct s_redir		*prev;
 }	t_redir;
 
 typedef struct s_cmd
 {
 	int				order;
 	char			*name;
-	char			**args;
-	t_redir			*first_in_redir;
-	t_redir			*first_out_redir;
+	t_list			*args;
+	t_list			*in_redir;
+	t_list			*out_redir;
 	struct s_cmd	*next;
 	struct s_cmd	*prev;
 }	t_cmd;
+
+typedef struct s_params
+{
+	char		*line;
+	int			*i;
+	char		*quote;
+	t_cmd		*res;
+}	t_params;
 
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);
@@ -69,8 +76,9 @@ char			*get_executable_path(char *name, char **envp);
 int				is_seperator(char c);
 char			*malloc_word(char *start, char *end);
 int				quotes(char c, char *quote);
+char			*get_word(char *line, int *i, char *quote);
 
 //parse.c
-t_cmd			*parse(char *line, char **envp);
+t_list			*parse(char *line, char **envp);
 
 #endif

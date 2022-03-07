@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 09:50:19 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 13:04:42 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,33 @@ void	check_prompt(char *line, char **envp)
 		free(path);
 	}
 }
+void	printff(void *arg)
+{
+	printf("%s\n", (char *)arg);
+}
 
+void	printredir(void *arg)
+{
+	t_redir *tmp = arg;
+	printf("|%s| type=%d\n",tmp->str, tmp->type);
+}
+
+void	printcmd(void *param)
+{
+	t_cmd *cmd;
+
+	cmd = param;
+	printff(cmd->name);
+	ft_lstiter(cmd->args, printff);
+	printf("in redirs\n");
+	ft_lstiter(cmd->in_redir, printredir);
+	printf("out redirs\n");
+	ft_lstiter(cmd->out_redir, printredir);
+}
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
-	t_cmd	*cmd;
+	t_list	*cmd_lst;
 
 	(void)argc;
 	(void)argv;
@@ -126,7 +148,9 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			//check_prompt(line, envp);
-			cmd = parse(line, envp);
+			cmd_lst = parse(line, envp);
+			ft_lstiter(cmd_lst, printcmd);
+
 		}
 		//printf("%s\n", line);
 		disp_next_prompt(&line);

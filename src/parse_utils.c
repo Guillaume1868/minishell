@@ -2,9 +2,26 @@
 
 int		is_seperator(char c)
 {
-	if (c == ' ' | c == '<' | c == '>')
+	if (c == ' ' | c == '<' | c == '>' | c == ';'| c == '|')
 		return (1);
 	return (0);
+}
+
+char *get_word(char *line, int *i, char *quote)
+{
+	char	*start;
+	char	*end;
+	char	*res;
+
+	start = &line[*i];
+	while (line[*i] != 0 && !(is_seperator(line[*i]) && *quote == '0'))
+	{
+		*i = *i + 1;
+		quotes(line[*i], quote);
+	}
+	end = &line[*i - 1];
+	res= malloc_word(start, end);
+	return (res);
 }
 
 char *malloc_word(char *start, char *end)
