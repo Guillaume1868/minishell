@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 13:51:36 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 14:10:47 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,16 @@
 # include <dirent.h>
 # include <errno.h>
 
-#define KNRM  "\x1B[0m"
-#define KRED  "\x1B[31m"
-#define KGRN  "\x1B[32m"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KMAG  "\x1B[35m"
-#define KCYN  "\x1B[36m"
-#define KWHT  "\x1B[37m"
+# define KNRM  "\x1B[0m"
+# define KRED  "\x1B[31m"
+# define KGRN  "\x1B[32m"
+# define KYEL  "\x1B[33m"
+# define KBLU  "\x1B[34m"
+# define KMAG  "\x1B[35m"
+# define KCYN  "\x1B[36m"
+# define KWHT  "\x1B[37m"
 
 enum e_type{out, append_out, in, delim_in};
-
 
 typedef struct s_redir
 {
@@ -88,5 +87,10 @@ char			*get_word(char *line, int *i, char *quote);
 
 //parse.c
 t_list			*parse(char *line, char **envp);
+
+//debug.c
+void			print_lst(void *arg);
+void			print_redir(void *arg);
+void			print_cmd(void *param);
 
 #endif

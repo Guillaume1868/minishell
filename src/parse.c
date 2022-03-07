@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/07 14:20:42 by gaubert           #+#    #+#             */
+/*   Updated: 2022/03/07 14:33:08 by gaubert          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	skip_space(char *str, int *i)
 {
-	while(str[*i] == ' ')
+	while (str[*i] == ' ')
 		*i = *i + 1;
 }
 
@@ -24,15 +36,26 @@ void	save_redir(t_params p, enum e_type type, int in_mode)
 		ft_lstadd_back(&p.res->out_redir, ft_lstnew(tmp));
 }
 
+void	save_command(t_params *p, t_cmd *cmd, int pipe, t_list *c)
+{
+	*p->i = *p->i + 1;
+	cmd = (void *)ft_calloc(1, sizeof(t_cmd));
+	cmd->pipe_from_prec = pipe;
+	ft_lstadd_back(&c, ft_lstnew(cmd));
+	p->res = cmd;
+}
+
+//TODO:Error on >> to nothing
 t_list	*parse(char *line, char **envp)
 {
 	t_list		*c;
 	t_cmd		*cmd;
 	int			i;
-	char		quote = '0';
+	char		quote;
 	t_params	p;
 
 	(void)envp;
+	quote = '0';
 	i = 0;
 	cmd = (void *)ft_calloc(1, sizeof(t_cmd));
 	ft_lstadd_back(&c, ft_lstnew(cmd));
@@ -44,21 +67,9 @@ t_list	*parse(char *line, char **envp)
 	{
 		quotes(line[i], &quote);
 		if (quote == '0' && line[i] == ';')
-		{
-			i++;
-			cmd = (void *)ft_calloc(1, sizeof(t_cmd));
-			cmd->pipe_from_prec = 0;
-			ft_lstadd_back(&c, ft_lstnew(cmd));
-			p.res = cmd;
-		}
+			save_command(&p, cmd, 0, c);
 		else if (quote == '0' && line[i] == '|')
-		{
-			i++;
-			cmd = (void *)ft_calloc(1, sizeof(t_cmd));
-			cmd->pipe_from_prec = 1;
-			ft_lstadd_back(&c, ft_lstnew(cmd));
-			p.res = cmd;
-		}
+			save_command(&p, cmd, 1, c);
 		else if (quote == '0' && (line[i] == '<' || line[i] == '>'))
 		{
 			if (line[i] == '<' && line[i + 1] == '<')
@@ -70,14 +81,12 @@ t_list	*parse(char *line, char **envp)
 			else if (line[i] == '>')
 				save_redir(p, out, 0);
 		}
-		else if (line[i] != ' ')	//command
+		else if (line[i] != ' ')
 		{
-			if (cmd->name == NULL)
-				cmd->name = get_word(line, &i, &quote);
+			if (p.res->name == NULL)
+				p.res->name = get_word(line, &i, &quote);
 			else
-			{
-				ft_lstadd_back(&cmd->args, ft_lstnew(get_word(line, &i, &quote)));
-			}
+				ft_lstadd_back(&p.res->args, ft_lstnew(get_word(line, &i, &quote)));
 		}
 		else
 			i++;

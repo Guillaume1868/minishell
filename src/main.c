@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 14:01:25 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/07 14:09:13 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,9 @@ void	pwd(void)
 	char	dir[PATH_MAX];
 
 	if (getcwd(dir, sizeof(dir)) != NULL)
-	{
 		printf("%s\n", dir);
-	}
 	else
-	{
 		perror("pwd() error");
-	}
 }
 
 void	disp_next_prompt(char **line)
@@ -107,40 +103,6 @@ void	check_prompt(char *line, char **envp)
 		free(path);
 	}
 }
-void	printff(void *arg)
-{
-	printf("- %s\n", (char *)arg);
-}
-
-void	printredir(void *arg)
-{
-	t_redir	*tmp;
-
-	tmp = arg;
-	printf("|%s| type=%d\n", tmp->str, tmp->type);
-}
-
-void	printcmd(void *param)
-{
-	t_cmd	*cmd;
-
-	cmd = param;
-	if (cmd->pipe_from_prec)
-		printf("==========\n%sPIPED command:%s\n", KRED, KNRM);
-	else
-		printf("==========\n%scommand:%s\n", KYEL, KNRM);
-	printff(cmd->name);
-	if (cmd->args)
-		printf("args:\n");
-	ft_lstiter(cmd->args, printff);
-	if (cmd->in_redir)
-		printf("in redirs:\n");
-	ft_lstiter(cmd->in_redir, printredir);
-	if (cmd->out_redir)
-		printf("out redirs:\n");
-	ft_lstiter(cmd->out_redir, printredir);
-	printf("==========\n");
-}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -160,7 +122,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			cmd_lst = parse(line, envp);
-			ft_lstiter(cmd_lst, printcmd);
+			ft_lstiter(cmd_lst, print_cmd);
 		}
 		disp_next_prompt(&line);
 	}
