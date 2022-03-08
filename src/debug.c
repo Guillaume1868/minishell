@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:09:03 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 14:09:03 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/08 11:16:03 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	print_cmd(void *param)
 		printf("==========\n%sPIPED command:%s\n", KRED, KNRM);
 	else
 		printf("==========\n%scommand:%s\n", KYEL, KNRM);
-	print_lst(cmd->name);
 	if (cmd->args)
 		printf("args:\n");
 	ft_lstiter(cmd->args, print_lst);

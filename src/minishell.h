@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 14:10:47 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/08 11:17:40 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,10 @@ typedef struct s_redir
 {
 	int					type;
 	char				*str;
-	int					fd;
 }	t_redir;
 
 typedef struct s_cmd
 {
-	int				order;
-	char			*name;
 	t_list			*args;
 	t_list			*in_redir;
 	t_list			*out_redir;
