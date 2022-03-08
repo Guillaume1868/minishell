@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 14:09:13 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/08 11:20:46 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,45 +62,6 @@ void	ft_echo(char *argument)
 		while (argument[i] == ' ')
 			i++;
 		printf("%s", &argument[i]);
-	}
-}
-
-void	check_prompt(char *line, char **envp)
-{
-	int		i;
-	char	*argument;
-	char	*path;
-
-	i = 0;
-	while (line[i] != ' ' && line[i] != '\0')
-		i++;
-	argument = ft_strchr(line, ' ');
-	if (argument != 0)
-		argument++;
-	if (ft_strncmp(line, "cd", i) == 0)
-		ft_cd(argument, envp);
-	else if (ft_strncmp(line, "exit", i) == 0)
-		ft_exit();
-	else if (ft_strncmp(line, "help", i) == 0)
-		ft_help();
-	else if (ft_strncmp(line, "echo", i) == 0)
-		ft_echo(argument);
-	else if (ft_strncmp(line, "$", 1) == 0)
-		printf("%s\n", get_env(line + 1, envp));
-	else if (ft_strncmp(line, "env", i) == 0)
-		ft_env(envp);
-	else if (ft_strncmp(line, "pwd", i) == 0)
-		pwd();
-	else if (line[0] != '\0')
-	{
-		path = get_executable_path(&line[0], envp);
-		if (path)
-		{
-			printf("%s\n", path);
-		}
-		else
-			printf("minishell: %s command not found\n", line);
-		free(path);
 	}
 }
 
