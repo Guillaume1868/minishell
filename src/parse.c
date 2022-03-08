@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:20:42 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 14:33:08 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/08 11:18:17 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,7 @@ t_list	*parse(char *line, char **envp)
 				save_redir(p, out, 0);
 		}
 		else if (line[i] != ' ')
-		{
-			if (p.res->name == NULL)
-				p.res->name = get_word(line, &i, &quote);
-			else
-				ft_lstadd_back(&p.res->args, ft_lstnew(get_word(line, &i, &quote)));
-		}
+			ft_lstadd_back(&p.res->args, ft_lstnew(get_word(line, &i, &quote)));
 		else
 			i++;
 	}
