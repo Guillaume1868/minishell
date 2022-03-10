@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/10 14:48:38 by gaubert           #+#    #+#             */
-/*   Updated: 2021/11/08 16:04:30 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/08 11:57:08 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@ size_t	ft_strlen(char const *str)
 	if (!str)
 		return (0);
 	while (str[i] != '\0')
+		++i;
+	return (i);
+}
+
+size_t	ft_strlen_env(char const *str)
+{
+	size_t	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		++i;
 	return (i);
 }

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/08 11:20:46 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/10 13:11:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,12 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	if (argc == 2)
+	{
+		cmd_lst = parse(argv[1], envp);
+		ft_lstiter(cmd_lst, print_cmd);
+		exit (0);
+	}
 	if (signal(SIGINT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
 	if (signal(SIGQUIT, handle_signals) == SIG_ERR)

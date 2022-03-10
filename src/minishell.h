@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/08 11:17:40 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/10 13:39:27 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,16 @@ enum e_type{out, append_out, in, delim_in};
 
 typedef struct s_redir
 {
-	int					type;
-	char				*str;
+	int			type;
+	char		*str;
 }	t_redir;
 
 typedef struct s_cmd
 {
-	t_list			*args;
-	t_list			*in_redir;
-	t_list			*out_redir;
-	int				pipe_from_prec;
+	t_list		*args;
+	t_list		*in_redir;
+	t_list		*out_redir;
+	int			pipe_from_prec;
 }	t_cmd;
 
 typedef struct s_params
@@ -72,6 +72,7 @@ typedef struct s_shell {
 
 //env.c
 char			*get_env(char *name, char **envp);
+char			*get_env_2(char *name, char **envp);
 
 //find_exe.c
 char			*get_executable_path(char *name, char **envp);
@@ -79,8 +80,7 @@ char			*get_executable_path(char *name, char **envp);
 //parse_utils.c
 int				is_seperator(char c);
 char			*malloc_word(char *start, char *end);
-int				quotes(char c, char *quote);
-char			*get_word(char *line, int *i, char *quote);
+char			*get_word(char *line, int *i, char *quote, char **envp);
 
 //parse.c
 t_list			*parse(char *line, char **envp);
@@ -89,5 +89,9 @@ t_list			*parse(char *line, char **envp);
 void			print_lst(void *arg);
 void			print_redir(void *arg);
 void			print_cmd(void *param);
+
+//fill_word.c
+void			fill_word(char *res, char *line, char **envp, int *i);
+int				quotes(char c, char *quote);
 
 #endif

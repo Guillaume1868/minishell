@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 13:59:10 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 13:59:10 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/10 14:04:46 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,59 +19,65 @@ int	is_seperator(char c)
 	return (0);
 }
 
-char	*get_word(char *line, int *i, char *quote)
+void	env_cnt(char *line, int *add, int *del, char **envp)
 {
-	char	*start;
-	char	*end;
-	char	*res;
+	int		i;
+	char	q;
 
-	start = &line[*i];
-	while (line[*i] != 0 && !(is_seperator(line[*i]) && *quote == '0'))
+	i = 0;
+	q = '0';
+	while (line[i] != 0 && !(is_seperator(line[i]) && q == '0'))
 	{
-		*i = *i + 1;
-		quotes(line[*i], quote);
+		if (quotes(line[i], &q) && !(q == line[i]))
+		{
+			if (line[i] == '$' && (q == '\"' || q == '0'))
+			{
+				*del += ft_strlen_env(&line[i + 1]) + 1;
+				*add += ft_strlen(get_env_2(&line[i + 1], envp));
+			}
+		}
+		i = i + 1;
 	}
-	end = &line[*i - 1];
-	res = malloc_word(start, end);
-	return (res);
 }
 
-char	*malloc_word(char *start, char *end)
+int	char_cnt(char *line)
 {
-	char	quote;
 	int		i;
-	char	*res;
+	int		cnt;
+	char	q;
+
+	i = 0;
+	cnt = 0;
+	q = '0';
+	while (line[i] != 0 && !(is_seperator(line[i]) && q == '0'))
+	{
+		if (quotes(line[i], &q) && !(q == line[i]))
+			cnt++;
+		i = i + 1;
+	}
+	return (cnt);
+}
+
+char	*calloc_word(char *line, char **envp)
+{
+	int		add;
+	int		del;
 	int		count;
 
-	quote = '0';
-	i = -1;
-	count = 0;
-	while (start + ++i <= end)
-	{
-		quotes(*(start + i), &quote);
-		if (*(start + i) != quote)
-			count++;
-	}
-	res = ft_calloc(sizeof(char), count + 1);
-	i = -1;
-	count = -1;
-	quote = '0';
-	while (start + ++i <= end)
-	{
-		if (quotes(*(start + i), &quote) && *(start + i) != quote)
-			res[++count] = start[i];
-	}
-	return (res);
+	add = 0;
+	del = 0;
+	env_cnt(line, &add, &del, envp);
+	count = char_cnt(line);
+	return (ft_calloc(sizeof(char), count + add - del + 1));
 }
 
-int	quotes(char c, char *quote)
+char	*get_word(char *line, int *i, char *quote, char **envp)
 {
-	if (*quote == '0' && (c == '\'' || c == '\"'))
-		*quote = c;
-	else if (*quote != '0' && c == *quote)
-	{
-		*quote = '0';
-		return (0);
-	}
-	return (1);
+	char	*res;
+
+	(void) quote;
+	res = calloc_word(&line[*i], envp);
+	fill_word(res, line, envp, i);
+	*quote = '0';
+	return (res);
 }
