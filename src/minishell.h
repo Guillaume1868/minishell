@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/10 13:39:27 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/11 14:38:58 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,8 @@ void			print_cmd(void *param);
 //fill_word.c
 void			fill_word(char *res, char *line, char **envp, int *i);
 int				quotes(char c, char *quote);
+
+//free.c
+void			ft_cmdfree(t_list *cmd_lst);
 
 #endif

@@ -1,6 +1,6 @@
 NAME 	=	minishell
 
-FILES	=	main builtin env find_exe parse parse_utils debug fill_word
+FILES	=	main builtin env find_exe parse parse_utils debug fill_word free
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
@@ -26,7 +26,7 @@ objs/%.o: src/%.c
 $(NAME): $(OBJ)
 	@printf "$(_INFO) Preparing libft\n"
 	@$(MAKE) bonus -C ./libft
-	@$(CC) $(OBJ) ./libft/libft.a $(INC) -o $(NAME)
+	@$(CC) $(OBJ) ./libft/libft.a $(INC) -g -o $(NAME)
 	@printf "$(_SUCCESS) $(NAME) ready.\n"
 
 clean:
