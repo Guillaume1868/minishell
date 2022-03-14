@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 13:59:10 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/10 14:04:46 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/14 10:25:10 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ char	*get_word(char *line, int *i, char *quote, char **envp)
 
 	(void) quote;
 	res = calloc_word(&line[*i], envp);
+	if (!res)
+		return (NULL);
 	fill_word(res, line, envp, i);
 	*quote = '0';
 	return (res);

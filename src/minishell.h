@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/11 14:38:58 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/14 12:20:44 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_params
 	int			*i;
 	char		*quote;
 	t_cmd		*res;
+	t_list		*c;
 }	t_params;
 
 // wtf ?
@@ -84,7 +85,12 @@ char			*get_word(char *line, int *i, char *quote, char **envp);
 
 //parse.c
 t_list			*parse(char *line, char **envp);
+int				save_redir(t_params p, enum e_type t, int mode, char **envp);
 
+//parse2.c
+void			pack_p(t_params *p, int *i, char *line, char *quote);
+void			pack_p2(t_params *p, t_cmd *cmd, t_list *c);
+void			redir(t_params *p, char *linei, char **envp);
 //debug.c
 void			print_lst(void *arg);
 void			print_redir(void *arg);
@@ -95,6 +101,10 @@ void			fill_word(char *res, char *line, char **envp, int *i);
 int				quotes(char c, char *quote);
 
 //free.c
-void			ft_cmdfree(t_list *cmd_lst);
+int				ft_cmdfree(t_list *cmd_lst);
+int				f_free(void *ptr);
+
+//free2.c
+int				f_exit(int i);
 
 #endif
