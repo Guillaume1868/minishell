@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/14 12:39:14 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/14 13:01:43 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int				save_redir(t_params p, enum e_type t, int mode, char **envp);
 //parse2.c
 void			pack_p(t_params *p, int *i, char *line, char *quote);
 void			redir(t_params *p, char *linei, char **envp);
+void			add_cmd(t_params *p);
+void			add_word(t_params *p, char **envp);
 //debug.c
 void			print_lst(void *arg);
 void			print_redir(void *arg);

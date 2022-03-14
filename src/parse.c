@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:20:42 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/14 12:45:31 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/14 13:01:30 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,7 @@ t_list	*parse(char *line, char **envp)
 
 	quote = '0';
 	i = 0;
-	p.c = NULL;
-	p.cmd = (void *)ft_calloc(1, sizeof(t_cmd));
-	if (!p.cmd)
-		exit(1);
-	ft_lstadd_back(&p.c, ft_lstnew(p.cmd));//TODO:protecc
+	add_cmd(&p);
 	pack_p(&p, &i, line, &quote);
 	while (line[i])
 	{
@@ -97,7 +93,7 @@ t_list	*parse(char *line, char **envp)
 		else if (quote == '0' && (line[i] == '<' || line[i] == '>'))
 			redir(&p, &line[i], envp);
 		else if (line[i] != ' ')
-			ft_lstadd_back(&p.cmd->args, ft_lstnew(get_word(line, &i, &quote, envp)));  // TODO: protect return null // TODO: protect return null
+			add_word(&p, envp);
 		else
 			i++;
 	}
