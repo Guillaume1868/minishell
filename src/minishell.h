@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/08 11:17:40 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/11 17:08:20 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/types.h>
 # include <dirent.h>
 # include <errno.h>
+# include <fcntl.h>
 
 # define KNRM  "\x1B[0m"
 # define KRED  "\x1B[31m"
@@ -62,7 +63,7 @@ typedef struct s_params
 void			rl_replace_line(const char *fuck, int c);
 
 //main.c
-void			check_prompt(char *line, char **envp);
+int				check_prompt(char *line, char **envp);
 
 typedef struct s_shell {
 	pid_t			id;
@@ -89,5 +90,11 @@ t_list			*parse(char *line, char **envp);
 void			print_lst(void *arg);
 void			print_redir(void *arg);
 void			print_cmd(void *param);
+
+//file_edit.c
+int				write_into_file(char *args, char *file);
+int				execute_program_2(char **arguments, char *path,
+					char **envp, int nbr_pipes);
+int				execute_program(char *path, t_list *args, char **envp);
 
 #endif

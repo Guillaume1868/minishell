@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/07 14:09:13 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/11 14:24:14 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	ft_echo(char *argument)
 	}
 }
 
-void	check_prompt(char *line, char **envp)
+/*int	check_prompt(char *line, char **envp)
 {
 	int		i;
 	char	*argument;
@@ -96,18 +96,21 @@ void	check_prompt(char *line, char **envp)
 		path = get_executable_path(&line[0], envp);
 		if (path)
 		{
-			printf("%s\n", path);
+			//printf("%s\n", path);
+			return (1);
 		}
 		else
 			printf("minishell: %s command not found\n", line);
 		free(path);
 	}
-}
+	return (0);
+}*/
 
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_list	*cmd_lst;
+	char	*path;
 
 	(void)argc;
 	(void)argv;
@@ -122,7 +125,10 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			cmd_lst = parse(line, envp);
-			ft_lstiter(cmd_lst, print_cmd);
+			//ft_lstiter(cmd_lst, print_cmd);
+			path = get_executable_path(&line[0], envp);
+			execute_program(path, cmd_lst, envp);
+			//free(path);
 		}
 		disp_next_prompt(&line);
 	}

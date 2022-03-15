@@ -1,6 +1,6 @@
 NAME 	=	minishell
 
-FILES	=	main builtin env find_exe parse parse_utils debug
+FILES	=	main builtin env find_exe parse parse_utils debug file_edit
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
