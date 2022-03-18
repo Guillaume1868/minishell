@@ -6,11 +6,12 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/11 14:51:14 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/18 13:59:54 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <termios.h>
 
 void	handle_signals(int signo)
 {
@@ -29,7 +30,7 @@ void	handle_signals(int signo)
 	}
 }
 
-void	pwd(void)
+void	pwd(void) //TODO: move dans builtin ?
 {
 	char	dir[PATH_MAX];
 
@@ -45,7 +46,7 @@ void	disp_next_prompt(char **line)
 	*line = readline ("$>");
 }
 
-void	ft_echo(char *argument)
+void	ft_echo(char *argument) //TODO: move dans builtin ?
 {
 	int	i;
 
@@ -65,11 +66,25 @@ void	ft_echo(char *argument)
 	}
 }
 
+void	ft_short()
+{
+	struct termios	attributes;
+
+	tcgetattr(STDIN_FILENO, &attributes);
+	attributes.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
+	if (signal(SIGINT, handle_signals) == SIG_ERR)
+		printf("failed to register interrupts with kernel\n");
+	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
+		printf("failed to register interrupts with kernel\n");
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line;
-	t_list	*cmd_lst;
+	char			*line;
+	t_list			*cmd_lst;
 
+	ft_short();
 	if (argc == 2)
 	{
 		cmd_lst = parse(argv[1], envp);
@@ -77,10 +92,6 @@ int	main(int argc, char **argv, char **envp)
 		ft_cmdfree(cmd_lst);
 		exit (0);
 	}
-	if (signal(SIGINT, handle_signals) == SIG_ERR)
-		printf("failed to register interrupts with kernel\n");
-	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
-		printf("failed to register interrupts with kernel\n");
 	line = readline ("$>");
 	while (line != NULL)
 	{
