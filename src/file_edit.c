@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:41:27 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/14 14:32:08 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/18 10:40:40 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,112 +48,161 @@ int	write_into_file(char *args, char *file)
 	return (result);
 }*/
 
-int	execute_program(char *path, t_list *cmd_lst, char **envp)
+void	exec_stdin(t_list *cmd_lst, t_exec *exec, int i)
 {
-	t_list	*tmp;
-	t_list	*args_list;
-	char	**args;
-	int		i;
-	int		j;
-	int		nbr_pipes;
-	pid_t	*pid;
-	int		*link;
-
-	nbr_pipes = -1;
-	tmp = cmd_lst;
-	while (tmp)
+	if (((t_cmd *)cmd_lst->content)->in_redir)
 	{
-		nbr_pipes++;
-		tmp = tmp->next;
+		exec->tmp = ((t_cmd *)cmd_lst->content)->in_redir;
+		if (((t_redir *)exec->tmp->content)->type == 2)
+		{
+			close(exec->link[(i - 1) * 2]);
+			exec->link[(i - 1) * 2] = open(((t_redir *)exec->tmp->content)->str,
+					O_RDONLY);
+		}
+		else if (((t_redir *)exec->tmp->content)->type == 3)
+		{
+			ft_heredoc(exec->tmp, exec->link, i);
+			exec->nbr_pipes++;
+		}
 	}
-	i = -1;
-	pid = malloc(sizeof(int) * (nbr_pipes + 1));
-	link = malloc(sizeof(int) * (2 * nbr_pipes));
-	while (++i < nbr_pipes)
-		if (pipe(link + i * 2) < 0)
-			exit(1);
+}
+
+void	exec_stdout(t_list *cmd_lst, t_exec *exec, int i)
+{
+	if (((t_cmd *)cmd_lst->content)->out_redir)
+	{
+		exec->tmp = ((t_cmd *)cmd_lst->content)->out_redir;
+		close(exec->link[i * 2 + 1]);
+		if (((t_redir *)exec->tmp->content)->type == 0)
+			exec->link[i * 2 + 1] = open(((t_redir *)exec->tmp->content)->str,
+					O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		else if (((t_redir *)exec->tmp->content)->type == 1)
+			exec->link[i * 2 + 1] = open(((t_redir *)exec->tmp->content)->str,
+					O_WRONLY | O_APPEND | O_CREAT, 0644);
+	}
+}
+
+void	child_program(t_list *cmd_lst, t_exec *exec, int i)
+{
+	int		j;
+
+	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+	j = 0;
+	while (exec->tmp)
+	{
+		exec->tmp = exec->tmp->next;
+		j++;
+	}
+	exec->args = malloc(sizeof(char *) * (j + 1));
+	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+	j = 0;
+	while (exec->tmp)
+	{
+		exec->args[j] = (char *)exec->tmp->content;
+		exec->tmp = exec->tmp->next;
+		j++;
+	}
+	exec->args[j] = 0;
+	exec_stdin(cmd_lst, exec, i);
+	exec_stdout(cmd_lst, exec, i);
+	if (cmd_lst->next || ((t_cmd *)cmd_lst->content)->out_redir)
+		dup2(exec->link[i * 2 + 1], 1);
+	if (i != 0)
+		dup2(exec->link[(i - 1) * 2], 0);
+}
+
+void	itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
+{
+	int	i;
+	int	j;
+
 	i = 0;
 	while (cmd_lst)
 	{
-		pid[i] = fork();
-		if (pid[i] == 0)
+		exec->pid[i] = fork();
+		if (exec->pid[i] == 0)
 		{
-			args_list = ((t_cmd *)cmd_lst->content)->args;
-			path = get_executable_path((char *)args_list->content, envp);
-			tmp = args_list;
-			j = 0;
-			while (tmp)
-			{
-				tmp = tmp->next;
-				j++;
-			}
-			args = malloc(sizeof(char *) * (j + 1));
-			tmp = args_list;
-			j = 0;
-			while (tmp)
-			{
-				args[j] = (char *)tmp->content;
-				tmp = tmp->next;
-				j++;
-			}
-			args[j] = 0;
-			print_cmd(cmd_lst->content);
-			if (((t_cmd *)cmd_lst->content)->out_redir)
-			{
-				tmp = ((t_cmd *)cmd_lst->content)->out_redir;
-				if (((t_redir *)tmp->content)->type == 0)
-				{
-					close(link[i * 2 + 1]);
-					link[i * 2 + 1] = open(((t_redir *)tmp->content)->str,
-							O_WRONLY | O_CREAT);
-				}
-				else if (((t_redir *)tmp->content)->type == 1)
-				{
-					close(link[i * 2 + 1]);
-					printf("WTFDSFsGFDSGDSFG");
-					link[i * 2 + 1] = open(((t_redir *)tmp->content)->str,
-							O_WRONLY | O_APPEND | O_CREAT);
-					/*while (j != 0 && j != -1)
-						j = read(link[i * 2 + 1], 0, 1);*/
-				}
-			}
-			else if (((t_cmd *)cmd_lst->content)->in_redir)
-			{
-				tmp = ((t_cmd *)cmd_lst->content)->in_redir;
-				if (((t_redir *)tmp->content)->type == 2)
-				{
-					close(link[(i - 1) * 2]);
-				}
-				else if (((t_redir *)tmp->content)->type == 3)
-				{
-					close(link[(i - 1) * 2]);
-					link[(i - 1) * 2] = open(((t_redir *)tmp->content)->str,
-							O_WRONLY);
-				}
-			}
-			if (cmd_lst->next || ((t_cmd *)cmd_lst->content)->out_redir)
-				dup2(link[i * 2 + 1], 1);
-			if (i != 0 || ((t_cmd *)cmd_lst->content)->in_redir)
-				dup2(link[(i - 1) * 2], 0);
+			exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+			path = get_executable_path((char *)exec->tmp->content, envp);
+			child_program(cmd_lst, exec, i);
 			j = -1;
-			while (++j < (2 * (nbr_pipes)))
-				close(link[j]);
+			while (++j < (2 * (exec->nbr_pipes)))
+				close(exec->link[j]);
 			if (path)
-				execve(path, args, envp);
-			free(args);
+				execve(path, exec->args, envp);
+			free(exec->args);
 			free(path);
 			exit(1);
 		}
 		i++;
 		cmd_lst = cmd_lst->next;
 	}
+}
+
+void	execute_program(char *path, t_list *cmd_lst, char **envp)
+{
+	t_exec	exec;
+	int		i;
+
+	exec.nbr_pipes = -1;
+	exec.tmp = cmd_lst;
+	while (exec.tmp)
+	{
+		exec.nbr_pipes++;
+		exec.tmp = exec.tmp->next;
+	}
+	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
+	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));
 	i = -1;
-	while (++i < (2 * nbr_pipes))
-		close(link[i]);
+	while (++i < exec.nbr_pipes)
+		if (pipe(exec.link + i * 2) < 0)
+			exit(1);
+	itering_prog(path, cmd_lst, &exec, envp);
 	i = -1;
-	while (++i < nbr_pipes + 1)
-		waitpid(pid[i], 0, 0);
-	free(link);
-	free(pid);
-	return (1);
+	while (++i < (2 * exec.nbr_pipes))
+		close(exec.link[i]);
+	i = -1;
+	while (++i < exec.nbr_pipes + 1)
+		waitpid(exec.pid[i], 0, 0);
+	free(exec.link);
+	free(exec.pid);
+}
+
+void	change_pip(int *pip, int i, int *link)
+{
+	close(pip[1]);
+	if (i == 0)
+	{
+		close(link[0]);
+		link[0] = pip[0];
+		dup2(link[0], 0);
+	}
+	else
+	{
+		close(link[(i - 1) * 2]);
+		link[(i - 1) * 2] = pip[0];
+	}
+}
+
+void	ft_heredoc(t_list *tmp, int *link, int i)
+{
+	char	*line;
+	int		pip[2];
+
+	pipe(pip);
+	line = readline("heredoc>");
+	while (1)
+	{
+		if (line[0] != '\0')
+		{
+			if (ft_strncmp(line, ((t_redir *)tmp->content)->str,
+					ft_strlen(line)) == 0 && ft_strlen(line) != 0)
+				break ;
+			ft_putendl_fd(line, pip[1]);
+		}
+		free(line);
+		line = readline("heredoc>");
+	}
+	free(line);
+	change_pip(pip, i, link);
 }

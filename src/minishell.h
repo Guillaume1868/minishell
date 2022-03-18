@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/11 17:08:20 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/18 10:31:54 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,17 @@ void			print_cmd(void *param);
 int				write_into_file(char *args, char *file);
 int				execute_program_2(char **arguments, char *path,
 					char **envp, int nbr_pipes);
-int				execute_program(char *path, t_list *args, char **envp);
+void				execute_program(char *path, t_list *args, char **envp);
+void			ft_heredoc(t_list *tmp, int *link, int i);
+
+typedef struct s_exec
+{
+	char		**args;
+	char		*path;
+	int			*link;
+	int			nbr_pipes;
+	t_list		*tmp;
+	pid_t		*pid;
+}				t_exec;
 
 #endif
