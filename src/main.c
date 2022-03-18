@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/18 13:59:54 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/18 14:40:51 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	pwd(void) //TODO: move dans builtin ?
 void	disp_next_prompt(char **line)
 {
 	free(*line);
-	*line = readline ("$>");
+	*line = readline ("\033[36;1m$>\033[0m");
 }
 
 void	ft_echo(char *argument) //TODO: move dans builtin ?
@@ -66,7 +66,7 @@ void	ft_echo(char *argument) //TODO: move dans builtin ?
 	}
 }
 
-void	ft_short()
+void	ft_short(void)
 {
 	struct termios	attributes;
 
@@ -92,7 +92,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_cmdfree(cmd_lst);
 		exit (0);
 	}
-	line = readline ("$>");
+	line = readline ("\033[36;1m$>\033[0m");
 	while (line != NULL)
 	{
 		if (line[0] != '\0')
@@ -103,5 +103,4 @@ int	main(int argc, char **argv, char **envp)
 		}
 		disp_next_prompt(&line);
 	}
-	//redire a vbotev si jarrive a print le exit
 }
