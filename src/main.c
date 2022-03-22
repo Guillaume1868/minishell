@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/11 14:24:14 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/21 14:00:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,52 +65,12 @@ void	ft_echo(char *argument)
 	}
 }
 
-/*int	check_prompt(char *line, char **envp)
-{
-	int		i;
-	char	*argument;
-	char	*path;
-
-	i = 0;
-	while (line[i] != ' ' && line[i] != '\0')
-		i++;
-	argument = ft_strchr(line, ' ');
-	if (argument != 0)
-		argument++;
-	if (ft_strncmp(line, "cd", i) == 0)
-		ft_cd(argument, envp);
-	else if (ft_strncmp(line, "exit", i) == 0)
-		ft_exit();
-	else if (ft_strncmp(line, "help", i) == 0)
-		ft_help();
-	else if (ft_strncmp(line, "echo", i) == 0)
-		ft_echo(argument);
-	else if (ft_strncmp(line, "$", 1) == 0)
-		printf("%s\n", get_env(line + 1, envp));
-	else if (ft_strncmp(line, "env", i) == 0)
-		ft_env(envp);
-	else if (ft_strncmp(line, "pwd", i) == 0)
-		pwd();
-	else if (line[0] != '\0')
-	{
-		path = get_executable_path(&line[0], envp);
-		if (path)
-		{
-			//printf("%s\n", path);
-			return (1);
-		}
-		else
-			printf("minishell: %s command not found\n", line);
-		free(path);
-	}
-	return (0);
-}*/
-
 int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	t_list	*cmd_lst;
 	char	*path;
+	int		i;
 
 	(void)argc;
 	(void)argv;
@@ -119,6 +79,10 @@ int	main(int argc, char **argv, char **envp)
 	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
 	line = readline ("$>");
+	i = 0;
+	while (envp[i])
+		i++;
+	envp = recreate_envp(envp, i, 0);
 	while (line != NULL)
 	{
 		if (line[0] != '\0')
@@ -127,7 +91,7 @@ int	main(int argc, char **argv, char **envp)
 			cmd_lst = parse(line, envp);
 			//ft_lstiter(cmd_lst, print_cmd);
 			path = get_executable_path(&line[0], envp);
-			execute_program(path, cmd_lst, envp);
+			envp = execute_program(path, cmd_lst, envp);
 			//free(path);
 		}
 		disp_next_prompt(&line);

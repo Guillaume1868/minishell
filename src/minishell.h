@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/18 10:31:54 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/21 17:07:45 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ typedef struct s_params
 void			rl_replace_line(const char *fuck, int c);
 
 //main.c
-int				check_prompt(char *line, char **envp);
+void			pwd(void);
+void			ft_echo(char *argument);
 
 typedef struct s_shell {
 	pid_t			id;
@@ -94,9 +95,15 @@ void			print_cmd(void *param);
 //file_edit.c
 int				write_into_file(char *args, char *file);
 int				execute_program_2(char **arguments, char *path,
-					char **envp, int nbr_pipes);
-void				execute_program(char *path, t_list *args, char **envp);
+					char ***envp, int nbr_pipes);
+char			**execute_program(char *path, t_list *args, char **envp);
 void			ft_heredoc(t_list *tmp, int *link, int i);
+
+//functions.c
+char			**ft_export(char **envp, char *args);
+char			**make_export(char **envp, char *args, char *tmp, int i);
+char			**recreate_envp(char **envp, int i, int ismalloc);
+char			**ft_unset(char **envp, char *args);
 
 typedef struct s_exec
 {

@@ -6,47 +6,11 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:41:27 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/18 10:40:40 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/22 10:30:27 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	write_into_file(char *args, char *file)
-{
-	int	fd;
-
-	fd = open(file, O_CREAT);
-	if (fd == -1)
-		return (0);
-	write(fd, args, ft_strlen(args));
-	close(fd);
-	return (1);
-}
-
-/*char	*read_file(char *args, char *file)
-{
-	int		fd;
-	char	*result;
-	char	*tmp;
-
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-		return (0);
-	result = 0;
-	tmp = "2";
-	while (tmp)
-	{
-		tmp = ft_strdup(get_next_line(fd));
-		if (tmp)
-		{
-			result = ft_strjoin(result, tmp);
-			free(tmp);
-		}
-	}
-	close(fd);
-	return (result);
-}*/
 
 void	exec_stdin(t_list *cmd_lst, t_exec *exec, int i)
 {
@@ -111,35 +75,57 @@ void	child_program(t_list *cmd_lst, t_exec *exec, int i)
 		dup2(exec->link[(i - 1) * 2], 0);
 }
 
-void	itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
+char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*tmp;
+	char	**envptmp;
 
 	i = 0;
+	envptmp = 0;
 	while (cmd_lst)
 	{
-		exec->pid[i] = fork();
-		if (exec->pid[i] == 0)
+		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+		if ((t_list *)exec->tmp->next == 0)
+			tmp = 0;
+		else
+			tmp = (char *)((t_list *)exec->tmp->next)->content;
+		//if (exec->nbr_pipes == 0)
+			envptmp = check_builtin((char *)exec->tmp->content, tmp, envp);
+		if (envptmp == 0)
 		{
-			exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-			path = get_executable_path((char *)exec->tmp->content, envp);
-			child_program(cmd_lst, exec, i);
-			j = -1;
-			while (++j < (2 * (exec->nbr_pipes)))
-				close(exec->link[j]);
-			if (path)
-				execve(path, exec->args, envp);
-			free(exec->args);
-			free(path);
-			exit(1);
+			exec->pid[i] = fork();
+			if (exec->pid[i] == 0)
+			{
+				exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+				path = get_executable_path((char *)exec->tmp->content, envp);
+				print_cmd(cmd_lst->content);
+				child_program(cmd_lst, exec, i);
+				j = -1;
+				while (++j < (2 * (exec->nbr_pipes)))
+					close(exec->link[j]);
+				if (check_builtin_forked(exec->args[0], exec->args[1], envp) == 0)
+				{
+					if (path)
+						execve(path, exec->args, envp);
+					else
+						printf("minishell: %s: command not found\n", exec->args[0]);
+				}
+				free(exec->args);
+				free(path);
+				exit(1);
+			}
 		}
+		else
+			envp = envptmp;
 		i++;
 		cmd_lst = cmd_lst->next;
 	}
+	return (envp);
 }
 
-void	execute_program(char *path, t_list *cmd_lst, char **envp)
+char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 {
 	t_exec	exec;
 	int		i;
@@ -157,7 +143,7 @@ void	execute_program(char *path, t_list *cmd_lst, char **envp)
 	while (++i < exec.nbr_pipes)
 		if (pipe(exec.link + i * 2) < 0)
 			exit(1);
-	itering_prog(path, cmd_lst, &exec, envp);
+	envp = itering_prog(path, cmd_lst, &exec, envp);
 	i = -1;
 	while (++i < (2 * exec.nbr_pipes))
 		close(exec.link[i]);
@@ -166,6 +152,7 @@ void	execute_program(char *path, t_list *cmd_lst, char **envp)
 		waitpid(exec.pid[i], 0, 0);
 	free(exec.link);
 	free(exec.pid);
+	return (envp);
 }
 
 void	change_pip(int *pip, int i, int *link)
@@ -201,7 +188,7 @@ void	ft_heredoc(t_list *tmp, int *link, int i)
 			ft_putendl_fd(line, pip[1]);
 		}
 		free(line);
-		line = readline("heredoc>");
+		line = readline(">");
 	}
 	free(line);
 	change_pip(pip, i, link);

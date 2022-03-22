@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:01:53 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/02 10:37:15 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/21 14:35:58 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,36 @@ void	ft_env(char	**envp)
 	i = -1;
 	while (envp[++i])
 		printf("%s\n", envp[i]);
+}
+
+int	check_builtin_forked(char *cmd, char *args, char **envp)
+{
+	if (ft_strncmp(cmd, "help", ft_strlen(cmd)) == 0)
+		ft_help();
+	else if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0)
+		ft_echo(args);
+	/*else if (ft_strncmp(cmd, "$", 1) == 0)
+		printf("%s\n", get_env(cmd + 1, envp));*/
+	else if (ft_strncmp(cmd, "env", ft_strlen(cmd)) == 0)
+		ft_env(envp);
+	else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0)
+		pwd();
+	else
+		return (0);
+	return (1);
+}
+
+char	**check_builtin(char *cmd, char *args, char **envp)
+{
+	if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0)
+		ft_cd(args, envp);
+	else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0)
+		ft_exit();
+	else if (ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0)
+		envp = ft_export(envp, args);
+	else if (ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0)
+		envp = ft_unset(envp, args);
+	else
+		return (0);
+	return (envp);
 }
