@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/23 11:22:50 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/23 11:55:27 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	path = NULL;
 	if (signal(SIGINT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
 	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
@@ -89,8 +90,8 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			cmd_lst = parse(line, envp);
-			//ft_lstiter(cmd_lst, print_cmd);
-			path = get_executable_path(&line[0], envp);
+			ft_lstiter(cmd_lst, print_cmd);
+			//path = get_executable_path(&line[0], envp);
 			envp = execute_program(path, cmd_lst, envp);
 			//free(path);
 		}
