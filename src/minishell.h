@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/21 17:07:45 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/23 11:21:58 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,27 +92,40 @@ void			print_lst(void *arg);
 void			print_redir(void *arg);
 void			print_cmd(void *param);
 
-//file_edit.c
-int				write_into_file(char *args, char *file);
-int				execute_program_2(char **arguments, char *path,
-					char ***envp, int nbr_pipes);
-char			**execute_program(char *path, t_list *args, char **envp);
-void			ft_heredoc(t_list *tmp, int *link, int i);
-
-//functions.c
-char			**ft_export(char **envp, char *args);
-char			**make_export(char **envp, char *args, char *tmp, int i);
-char			**recreate_envp(char **envp, int i, int ismalloc);
-char			**ft_unset(char **envp, char *args);
-
 typedef struct s_exec
 {
 	char		**args;
 	char		*path;
 	int			*link;
 	int			nbr_pipes;
+	int			counter;
 	t_list		*tmp;
 	pid_t		*pid;
 }				t_exec;
+
+//file_edit.c
+void			ft_heredoc(t_list *tmp, t_exec *exec, int i);
+void			exec_stdin(t_list *cmd_lst, t_exec *exec, int i);
+void			exec_stdout(t_list *cmd_lst, t_exec *exec, int i);
+void			count_pipes(t_exec *exec, t_list *cmd_lst);
+void			change_pip(int *pip, int i, t_exec *exec);
+
+//execution.c
+char			**execute_program(char *path, t_list *args, char **envp);
+void			child_program(t_list *cmd_lst, t_exec *exec, int i);
+void			pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp,
+					char *tmp);
+char			**itering_prog(char *path, t_list *cmd_lst, t_exec *exec,
+					char **envp);
+
+//functions.c
+char			**ft_export(char **envp, char *args);
+char			**make_export(char **envp, char *args, char *tmp, int i);
+char			**ft_unset(char **envp, char *args);
+
+//functions2.c
+char			**recreate_envp(char **envp, int i, int ismalloc);
+int				check_builtin_forked(char *cmd, char *args, char **envp);
+char			**check_builtin(char *cmd, char *args, char **envp);
 
 #endif

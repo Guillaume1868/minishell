@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:38:11 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/21 16:00:07 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/23 11:20:04 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,14 @@ char	*ft_strjoinfree(char *s1, char *s2)
 	return (res);
 }
 
-char	**ft_unset(char **envp, char *args)
+char	**make_unset(char **envp, char *args, char **res)
 {
 	int		i;
 	int		j;
 	char	*tmp;
-	char	**res;
 
-	i = -1;
-	j = 0;
-	if (args == 0 || args[0] == '=' || args[0] == '\0'
-		|| ft_isdigit(args[0]) == 1)
-		return (envp);
-	while (envp[j])
-		j++;
-	res = malloc(sizeof(char *) * j + 1);
 	j = -1;
+	i = -1;
 	while (envp[++i])
 	{
 		tmp = ft_strchr(envp[i], '=');
@@ -58,6 +50,22 @@ char	**ft_unset(char **envp, char *args)
 	}
 	res[++j] = 0;
 	res[++j] = 0;
+	return (res);
+}
+
+char	**ft_unset(char **envp, char *args)
+{
+	int		j;
+	char	**res;
+
+	j = 0;
+	if (args == 0 || args[0] == '=' || args[0] == '\0'
+		|| ft_isdigit(args[0]) == 1)
+		return (envp);
+	while (envp[j])
+		j++;
+	res = malloc(sizeof(char *) * j + 1);
+	res = make_unset(envp, args, res);
 	free(envp);
 	return (res);
 }
@@ -88,26 +96,6 @@ char	**ft_export(char **envp, char *args)
 		}
 	}
 	return (envp);
-}
-
-char	**recreate_envp(char **envp, int len, int ismalloc)
-{
-	char	**res;
-	int		i;
-
-	res = malloc(sizeof(char *) * (len + 1));
-	i = -1;
-	while (envp[++i])
-	{
-		res[i] = ft_strdup(envp[i]);
-		if (ismalloc == 1)
-			free(envp[i]);
-	}
-	res[i] = 0;
-	res[i + 1] = 0;
-	if (ismalloc == 1)
-		free(envp);
-	return (res);
 }
 
 char	**make_export(char **envp, char *args, char *tmp, int i)

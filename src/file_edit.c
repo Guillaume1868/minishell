@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:41:27 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/22 10:30:27 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/23 10:55:12 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,9 @@ void	exec_stdin(t_list *cmd_lst, t_exec *exec, int i)
 		}
 		else if (((t_redir *)exec->tmp->content)->type == 3)
 		{
-			ft_heredoc(exec->tmp, exec->link, i);
-			exec->nbr_pipes++;
+			ft_heredoc(exec->tmp, exec, i);
+			if (exec->nbr_pipes == 0)
+				exec->nbr_pipes++;
 		}
 	}
 }
@@ -46,144 +47,48 @@ void	exec_stdout(t_list *cmd_lst, t_exec *exec, int i)
 	}
 }
 
-void	child_program(t_list *cmd_lst, t_exec *exec, int i)
+void	count_pipes(t_exec *exec, t_list *cmd_lst)
 {
-	int		j;
-
-	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-	j = 0;
+	exec->nbr_pipes = -1;
+	exec->tmp = cmd_lst;
 	while (exec->tmp)
 	{
+		exec->nbr_pipes++;
 		exec->tmp = exec->tmp->next;
-		j++;
 	}
-	exec->args = malloc(sizeof(char *) * (j + 1));
-	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-	j = 0;
-	while (exec->tmp)
-	{
-		exec->args[j] = (char *)exec->tmp->content;
-		exec->tmp = exec->tmp->next;
-		j++;
-	}
-	exec->args[j] = 0;
-	exec_stdin(cmd_lst, exec, i);
-	exec_stdout(cmd_lst, exec, i);
-	if (cmd_lst->next || ((t_cmd *)cmd_lst->content)->out_redir)
-		dup2(exec->link[i * 2 + 1], 1);
-	if (i != 0)
-		dup2(exec->link[(i - 1) * 2], 0);
 }
 
-char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
-{
-	int		i;
-	int		j;
-	char	*tmp;
-	char	**envptmp;
-
-	i = 0;
-	envptmp = 0;
-	while (cmd_lst)
-	{
-		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-		if ((t_list *)exec->tmp->next == 0)
-			tmp = 0;
-		else
-			tmp = (char *)((t_list *)exec->tmp->next)->content;
-		//if (exec->nbr_pipes == 0)
-			envptmp = check_builtin((char *)exec->tmp->content, tmp, envp);
-		if (envptmp == 0)
-		{
-			exec->pid[i] = fork();
-			if (exec->pid[i] == 0)
-			{
-				exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-				path = get_executable_path((char *)exec->tmp->content, envp);
-				print_cmd(cmd_lst->content);
-				child_program(cmd_lst, exec, i);
-				j = -1;
-				while (++j < (2 * (exec->nbr_pipes)))
-					close(exec->link[j]);
-				if (check_builtin_forked(exec->args[0], exec->args[1], envp) == 0)
-				{
-					if (path)
-						execve(path, exec->args, envp);
-					else
-						printf("minishell: %s: command not found\n", exec->args[0]);
-				}
-				free(exec->args);
-				free(path);
-				exit(1);
-			}
-		}
-		else
-			envp = envptmp;
-		i++;
-		cmd_lst = cmd_lst->next;
-	}
-	return (envp);
-}
-
-char	**execute_program(char *path, t_list *cmd_lst, char **envp)
-{
-	t_exec	exec;
-	int		i;
-
-	exec.nbr_pipes = -1;
-	exec.tmp = cmd_lst;
-	while (exec.tmp)
-	{
-		exec.nbr_pipes++;
-		exec.tmp = exec.tmp->next;
-	}
-	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
-	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));
-	i = -1;
-	while (++i < exec.nbr_pipes)
-		if (pipe(exec.link + i * 2) < 0)
-			exit(1);
-	envp = itering_prog(path, cmd_lst, &exec, envp);
-	i = -1;
-	while (++i < (2 * exec.nbr_pipes))
-		close(exec.link[i]);
-	i = -1;
-	while (++i < exec.nbr_pipes + 1)
-		waitpid(exec.pid[i], 0, 0);
-	free(exec.link);
-	free(exec.pid);
-	return (envp);
-}
-
-void	change_pip(int *pip, int i, int *link)
+void	change_pip(int *pip, int i, t_exec *exec)
 {
 	close(pip[1]);
 	if (i == 0)
 	{
-		close(link[0]);
-		link[0] = pip[0];
-		dup2(link[0], 0);
+		close(exec->link[0]);
+		exec->link[0] = pip[0];
+		dup2(exec->link[0], 0);
 	}
 	else
 	{
-		close(link[(i - 1) * 2]);
-		link[(i - 1) * 2] = pip[0];
+		close(exec->link[(i - 1) * 2]);
+		exec->link[(i - 1) * 2] = pip[0];
 	}
 }
 
-void	ft_heredoc(t_list *tmp, int *link, int i)
+void	ft_heredoc(t_list *tmp, t_exec *exec, int i)
 {
 	char	*line;
 	int		pip[2];
 
 	pipe(pip);
-	line = readline("heredoc>");
+	line = readline(">");
 	while (1)
 	{
+		if (signal(SIGQUIT, exit) == SIG_ERR)
+			printf("failed to register interrupts with kernel\n");
 		if (line[0] != '\0')
 		{
-			if (ft_strncmp(line, ((t_redir *)tmp->content)->str,
-					ft_strlen(line)) == 0 && ft_strlen(line) != 0)
+			if (ft_strncmp(((t_redir *)tmp->content)->str, line,
+					ft_strlen(((t_redir *)tmp->content)->str) + 1) == 0)
 				break ;
 			ft_putendl_fd(line, pip[1]);
 		}
@@ -191,5 +96,5 @@ void	ft_heredoc(t_list *tmp, int *link, int i)
 		line = readline(">");
 	}
 	free(line);
-	change_pip(pip, i, link);
+	change_pip(pip, i, exec);
 }
