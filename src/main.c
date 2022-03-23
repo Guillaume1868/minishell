@@ -6,11 +6,12 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/23 11:55:27 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/23 12:03:47 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <termios.h>
 
 void	handle_signals(int signo)
 {
@@ -29,7 +30,7 @@ void	handle_signals(int signo)
 	}
 }
 
-void	pwd(void)
+void	pwd(void) //TODO: move dans builtin ?
 {
 	char	dir[PATH_MAX];
 
@@ -42,10 +43,10 @@ void	pwd(void)
 void	disp_next_prompt(char **line)
 {
 	free(*line);
-	*line = readline ("$>");
+	*line = readline ("\033[36;1m$>\033[0m");
 }
 
-void	ft_echo(char *argument)
+void	ft_echo(char *argument) //TODO: move dans builtin ?
 {
 	int	i;
 
@@ -65,21 +66,36 @@ void	ft_echo(char *argument)
 	}
 }
 
-int	main(int argc, char **argv, char **envp)
+void	ft_short()
 {
-	char	*line;
-	t_list	*cmd_lst;
-	char	*path;
-	int		i;
+	struct termios	attributes;
 
-	(void)argc;
-	(void)argv;
-	path = NULL;
+	tcgetattr(STDIN_FILENO, &attributes);
+	attributes.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 	if (signal(SIGINT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
 	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
-	line = readline ("$>");
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	char		*line;
+	t_list		*cmd_lst;
+	char		*path;
+	int			i;
+
+	ft_short();
+	path = NULL;
+	if (argc == 2)
+	{
+		cmd_lst = parse(argv[1], envp);
+		ft_lstiter(cmd_lst, print_cmd);
+		ft_cmdfree(cmd_lst);
+		exit (0);
+	}
+	line = readline ("\033[36;1m$>\033[0m");
 	i = 0;
 	while (envp[i])
 		i++;
@@ -97,5 +113,4 @@ int	main(int argc, char **argv, char **envp)
 		}
 		disp_next_prompt(&line);
 	}
-	//redire a vbotev si jarrive a print le exit
 }

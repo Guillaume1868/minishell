@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 14:20:42 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/08 11:18:17 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/14 13:01:30 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,21 @@ void	skip_space(char *str, int *i)
 		*i = *i + 1;
 }
 
-void	save_redir(t_params p, enum e_type type, int in_mode)
+int	save_redir2(t_params p, int in_mode, t_redir *tmp)
+{
+	t_list	*lst;
+
+	lst = ft_lstnew(tmp);
+	if (!lst)
+		return (f_free(tmp->str) + f_free(tmp) + ft_cmdfree(p.c) + f_exit(1));
+	if (in_mode)
+		ft_lstadd_back(&p.cmd->in_redir, lst);
+	else
+		ft_lstadd_back(&p.cmd->out_redir, lst);
+	return (0);
+}
+
+int	save_redir(t_params p, enum e_type type, int in_mode, char **envp)
 {
 	t_redir	*tmp;
 
@@ -28,63 +42,60 @@ void	save_redir(t_params p, enum e_type type, int in_mode)
 		*p.i = *p.i + 1;
 	skip_space(p.line, p.i);
 	tmp = malloc(sizeof(t_redir));
-	tmp->str = get_word(p.line, p.i, p.quote);
+	if (!tmp)
+		return (ft_cmdfree(p.c) + f_free(tmp) + f_exit(1));
+	tmp->str = get_word(p.line, p.i, p.quote, envp);
+	if (!tmp->str)
+		return (ft_cmdfree(p.c) + f_free(tmp) + f_free(tmp->str) + f_exit(1));
 	tmp->type = type;
-	if (in_mode)
-		ft_lstadd_back(&p.res->in_redir, ft_lstnew(tmp));
-	else
-		ft_lstadd_back(&p.res->out_redir, ft_lstnew(tmp));
+	if (*tmp->str == 0)
+	{
+		printf("redirect to nothing\n");
+		return (ft_cmdfree(p.c) + f_free(tmp) + f_free(tmp->str) + f_exit(1));
+	}
+	save_redir2(p, in_mode, tmp);
+	return (1);
 }
 
-void	save_command(t_params *p, t_cmd *cmd, int pipe, t_list *c)
+int	save_command(t_params *p, int pipe)
 {
+	t_list	*tmp;
+
 	*p->i = *p->i + 1;
-	cmd = (void *)ft_calloc(1, sizeof(t_cmd));
-	cmd->pipe_from_prec = pipe;
-	ft_lstadd_back(&c, ft_lstnew(cmd));
-	p->res = cmd;
+	p->cmd = (void *)ft_calloc(1, sizeof(t_cmd));
+	if (!p->cmd)
+		return (ft_cmdfree(p->c) + f_exit(1));
+	p->cmd->pipe_from_prec = pipe;
+	tmp = ft_lstnew(p->cmd);
+	if (!tmp)
+		return (f_free(p->cmd) + ft_cmdfree(p->c) + f_exit(1));
+	ft_lstadd_back(&p->c, tmp);
+	return (0);
 }
 
-//TODO:Error on >> to nothing
 t_list	*parse(char *line, char **envp)
 {
-	t_list		*c;
-	t_cmd		*cmd;
 	int			i;
 	char		quote;
 	t_params	p;
 
-	(void)envp;
 	quote = '0';
 	i = 0;
-	cmd = (void *)ft_calloc(1, sizeof(t_cmd));
-	ft_lstadd_back(&c, ft_lstnew(cmd));
-	p.i = &i;
-	p.line = line;
-	p.quote = &quote;
-	p.res = cmd;
+	add_cmd(&p);
+	pack_p(&p, &i, line, &quote);
 	while (line[i])
 	{
 		quotes(line[i], &quote);
 		if (quote == '0' && line[i] == ';')
-			save_command(&p, cmd, 0, c);
+			save_command(&p, 0);
 		else if (quote == '0' && line[i] == '|')
-			save_command(&p, cmd, 1, c);
+			save_command(&p, 1);
 		else if (quote == '0' && (line[i] == '<' || line[i] == '>'))
-		{
-			if (line[i] == '<' && line[i + 1] == '<')
-				save_redir(p, delim_in, 1);
-			else if (line[i] == '<')
-				save_redir(p, in, 1);
-			else if (line[i] == '>' && line[i + 1] == '>')
-				save_redir(p, append_out, 0);
-			else if (line[i] == '>')
-				save_redir(p, out, 0);
-		}
+			redir(&p, &line[i], envp);
 		else if (line[i] != ' ')
-			ft_lstadd_back(&p.res->args, ft_lstnew(get_word(line, &i, &quote)));
+			add_word(&p, envp);
 		else
 			i++;
 	}
-	return (c);
+	return (p.c);
 }

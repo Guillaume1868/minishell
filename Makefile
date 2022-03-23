@@ -1,11 +1,12 @@
 NAME 	=	minishell
 
-FILES	=	main builtin env find_exe parse parse_utils debug file_edit functions function2 execution
+FILES	=	main builtin env find_exe parse parse_utils debug fill_word free \
+			free2 parse2 file_edit functions function2 execution
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
-INC		=	-I. -I./libft -I$(HOME)/.brew/opt/readline/include -lreadline -L$(HOME)/.brew/opt/readline/lib
-#INC		=	-I. -I./libft -I/opt/homebrew/opt/readline/include -lreadline -L/opt/homebrew/opt/readline/lib
+#INC		=	-I. -I./libft -I$(HOME)/.brew/opt/readline/include -lreadline -L$(HOME)/.brew/opt/readline/lib
+INC		=	-I. -I./libft -I/opt/homebrew/opt/readline/include -lreadline -L/opt/homebrew/opt/readline/lib
 CC		=	gcc
 
 RM		=	rm -f
@@ -26,7 +27,7 @@ objs/%.o: src/%.c
 $(NAME): $(OBJ)
 	@printf "$(_INFO) Preparing libft\n"
 	@$(MAKE) bonus -C ./libft
-	@$(CC) $(OBJ) ./libft/libft.a $(INC) -o $(NAME)
+	@$(CC) $(OBJ) ./libft/libft.a $(INC) -g -o $(NAME)
 	@printf "$(_SUCCESS) $(NAME) ready.\n"
 
 clean:
