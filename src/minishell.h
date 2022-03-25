@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/23 11:59:43 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 10:28:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void			rl_replace_line(const char *fuck, int c);
 
 //main.c
 void			pwd(void);
-void			ft_echo(char *argument);
+void			ft_echo(char **args);
 
 typedef struct s_shell {
 	pid_t			id;
@@ -129,10 +129,11 @@ char			**itering_prog(char *path, t_list *cmd_lst, t_exec *exec,
 char			**ft_export(char **envp, char *args);
 char			**make_export(char **envp, char *args, char *tmp, int i);
 char			**ft_unset(char **envp, char *args);
+char			*ft_strjoinfree(char *s1, char *s2);
 
 //functions2.c
 char			**recreate_envp(char **envp, int i, int ismalloc);
-int				check_builtin_forked(char *cmd, char *args, char **envp);
+int				check_builtin_forked(char *cmd, char **args, char **envp);
 char			**check_builtin(char *cmd, char *args, char **envp);
 //fill_word.c
 void			fill_word(char *res, char *line, char **envp, int *i);

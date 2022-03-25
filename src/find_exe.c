@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 11:41:07 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/14 10:20:53 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/24 14:56:02 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ char	*get_executable_path(char *name, char **envp)
 
 	i = -1;
 	path = ft_split(get_env("PATH", envp), ':');
+	if (path == 0)
+		return (NULL);
 	while (path[++i])
 	{
 		ret = find_executable(name, path[i]);

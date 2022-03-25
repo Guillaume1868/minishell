@@ -6,13 +6,13 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/23 11:20:22 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/24 14:32:26 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_builtin_forked(char *cmd, char *args, char **envp)
+int	check_builtin_forked(char *cmd, char **args, char **envp)
 {
 	if (ft_strncmp(cmd, "help", ft_strlen(cmd)) == 0)
 		ft_help();

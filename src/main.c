@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/23 12:03:47 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/24 14:04:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,23 +46,25 @@ void	disp_next_prompt(char **line)
 	*line = readline ("\033[36;1m$>\033[0m");
 }
 
-void	ft_echo(char *argument) //TODO: move dans builtin ?
+void	ft_echo(char **args) //TODO: move dans builtin ?
 {
-	int	i;
+	int		i;
 
 	i = 0;
-	if (!(argument[0] == '-' && argument[1] == 'n'))
+	if (args[1] == 0)
+		printf("\n");
+	else if (!(args[1][0] == '-' && args[1][1] == 'n'))
 	{
-		while (argument[i] == ' ')
+		while (args[1][i] == ' ')
 			i++;
-		printf("%s\n", &argument[0]);
+		printf("%s\n", args[1]);
 	}
 	else
 	{
 		i += 2;
-		while (argument[i] == ' ')
+		while (args[2][i] == ' ')
 			i++;
-		printf("%s", &argument[i]);
+		printf("%s", args[2]);
 	}
 }
 
@@ -108,7 +110,8 @@ int	main(int argc, char **argv, char **envp)
 			cmd_lst = parse(line, envp);
 			ft_lstiter(cmd_lst, print_cmd);
 			//path = get_executable_path(&line[0], envp);
-			envp = execute_program(path, cmd_lst, envp);
+			if (((t_cmd *)cmd_lst->content)->args != 0)
+				envp = execute_program(path, cmd_lst, envp);
 			//free(path);
 		}
 		disp_next_prompt(&line);
