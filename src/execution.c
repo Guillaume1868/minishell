@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 14:10:04 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 15:05:40 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,29 @@ void	child_program(t_list *cmd_lst, t_exec *exec, int i)
 		dup2(exec->link[(i - 1) * 2], 0);
 }
 
-void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
+void	pid_equal_zero2(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 {
 	int		j;
 	char	**envptmp;
+
+	envptmp = 0;
+	j = -1;
+	while (++j < (2 * (exec->nbr_pipes)))
+		close(exec->link[j]);
+	if (check_builtin_forked(exec->args[0], exec->args, envp) == 0)
+	{
+		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+		envptmp = check_builtin((char *)exec->tmp->content, tmp, envp);
+		if (exec->path && envptmp == 0)
+			execve(exec->path, exec->args, envp);
+		else if (exec->path == 0)
+			printf("minishell: %s: command not found\n", exec->args[0]);
+	}
+}
+
+void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
+{
+	int		j;
 
 	exec->pid[exec->counter] = fork();
 	if (exec->pid[exec->counter] == 0)
@@ -52,36 +71,14 @@ void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 		exec->path = get_executable_path((char *)exec->tmp->content, envp);
 		child_program(cmd_lst, exec, exec->counter);
-		if (exec->path == 0 && (exec->args[0][0] == '/' || exec->args[0][0]
-				== '.'))
+		if (exec->path == 0 && (exec->args[0][0] == '/' || (exec->args[0][0]
+			== '.' && exec->args[0][1] == '/')))
 		{
 			exec->path = ft_strdup(exec->args[0]);
 			free(exec->args[0]);
 			exec->args[0] = ft_strdup(ft_strrchr(exec->path, '/'));
 		}
-		//print_cmd(cmd_lst->content);
-		j = -1;
-		while (++j < (2 * (exec->nbr_pipes)))
-			close(exec->link[j]);
-		if (check_builtin_forked(exec->args[0], exec->args, envp) == 0)
-		{
-			exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-			envptmp = check_builtin((char *)exec->tmp->content, tmp, envp);
-			if (exec->path && envptmp == 0)
-			{
-				g_success = 0;
-				execve(exec->path, exec->args, envp);
-			}
-			else if (exec->path == 0)
-			{
-				g_success = 1;
-				printf("minishell: %s: command not found\n", exec->args[0]);
-			}
-			else if (envptmp != 0)
-				g_success = 0;
-		}
-		else
-			g_success = 0;
+		pid_equal_zero2(cmd_lst, exec, envp, tmp);
 		j = -1;
 		while (exec->args[++j])
 			free(exec->args[j]);
@@ -124,7 +121,6 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 	i = 0;
 	while (cmd_lst)
 	{
-		envptmp = 0;
 		tmp = 0;
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 		if ((t_list *)exec->tmp->next != 0)
@@ -136,10 +132,7 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 		if (envptmp == 0)
 			pid_equal_zero(cmd_lst, exec, envp, tmp);
 		else
-		{
 			envp = envptmp;
-			g_success = 0;
-		}
 		i++;
 		cmd_lst = cmd_lst->next;
 	}
@@ -151,7 +144,6 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 	t_exec	exec;
 	int		i;
 
-	g_success = 1;
 	count_pipes(&exec, cmd_lst);
 	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
 	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 14:13:48 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 15:37:39 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	pwd(void) //TODO: move dans builtin ?
 {
 	char	dir[PATH_MAX];
 
+	g_success = 0;
 	if (getcwd(dir, sizeof(dir)) != NULL)
 		printf("%s\n", dir);
 	else
@@ -104,11 +105,11 @@ setvbuf(stdout, NULL, _IONBF, 0);
 	while (envp[i])
 		i++;
 	envp = recreate_envp(envp, i, 0);
+	g_success = 1;
 	while (line != NULL)
 	{
 		if (line[0] != '\0')
 		{
-			g_success = 1;
 			add_history(line);
 			cmd_lst = parse(line, envp);
 			//ft_lstiter(cmd_lst, print_cmd);
