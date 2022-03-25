@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 11:56:34 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 14:07:38 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 		exec->path = get_executable_path((char *)exec->tmp->content, envp);
 		child_program(cmd_lst, exec, exec->counter);
-		if (exec->path == 0 && exec->args[0][0] == '/')
+		if (exec->path == 0 && (exec->args[0][0] == '/' || exec->args[0][0]
+				== '.'))
 		{
 			exec->path = ft_strdup(exec->args[0]);
 			free(exec->args[0]);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/24 14:32:26 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:48:31 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	check_builtin_forked(char *cmd, char **args, char **envp)
 {
-	if (ft_strncmp(cmd, "help", ft_strlen(cmd)) == 0)
+	if (ft_strncmp(cmd, "help", 5) == 0)
 		ft_help();
-	else if (ft_strncmp(cmd, "echo", ft_strlen(cmd)) == 0)
+	else if (ft_strncmp(cmd, "echo", 5) == 0)
 		ft_echo(args);
-	else if (ft_strncmp(cmd, "env", ft_strlen(cmd)) == 0)
+	else if (ft_strncmp(cmd, "env", 4) == 0)
 		ft_env(envp);
-	else if (ft_strncmp(cmd, "pwd", ft_strlen(cmd)) == 0)
+	else if (ft_strncmp(cmd, "pwd", 4) == 0)
 		pwd();
 	else
 		return (0);
@@ -29,13 +29,13 @@ int	check_builtin_forked(char *cmd, char **args, char **envp)
 
 char	**check_builtin(char *cmd, char *args, char **envp)
 {
-	if (ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0)
+	if (ft_strncmp(cmd, "cd", 3) == 0)
 		ft_cd(args, envp);
-	else if (ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0)
+	else if (ft_strncmp(cmd, "exit", 5) == 0)
 		ft_exit();
-	else if (ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0)
+	else if (ft_strncmp(cmd, "export", 7) == 0)
 		envp = ft_export(envp, args);
-	else if (ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0)
+	else if (ft_strncmp(cmd, "unset", 6) == 0)
 		envp = ft_unset(envp, args);
 	else
 		return (0);
