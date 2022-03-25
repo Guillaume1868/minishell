@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 15:39:02 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 16:40:03 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ void	ft_echo(char **args) //TODO: move dans builtin ?
 		printf("\n");
 	else if (!(args[1][0] == '-' && args[1][1] == 'n'))
 	{
-		//while (args[1][i] == ' ')
-		//	i++;
 		i++;
 		printf("%s", args[i++]);
 		while (args[i] != 0)
@@ -67,8 +65,6 @@ void	ft_echo(char **args) //TODO: move dans builtin ?
 	else
 	{
 		i += 2;
-		//while (args[2][i] == ' ')
-		//	i++;
 		printf("%s", args[i++]);
 		while (args[i] != 0)
 			printf(" %s", args[i++]);
@@ -95,14 +91,11 @@ int	main(int argc, char **argv, char **envp)
 	char		*path;
 	int			i;
 
-setvbuf(stdout, NULL, _IONBF, 0);
-
 	ft_short();
 	path = NULL;
 	if (argc == 2)
 	{
 		cmd_lst = parse(argv[1], envp);
-		//ft_lstiter(cmd_lst, print_cmd);
 		ft_cmdfree(cmd_lst);
 		exit (0);
 	}
@@ -118,11 +111,8 @@ setvbuf(stdout, NULL, _IONBF, 0);
 		{
 			add_history(line);
 			cmd_lst = parse(line, envp);
-			//ft_lstiter(cmd_lst, print_cmd);
-			//path = get_executable_path(&line[0], envp);
 			if (((t_cmd *)cmd_lst->content)->args != 0)
 				envp = execute_program(path, cmd_lst, envp);
-			//free(path);
 		}
 		disp_next_prompt(&line);
 	}
