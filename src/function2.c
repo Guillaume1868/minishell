@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:00:49 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:05:13 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ char	**recreate_envp(char **envp, int len, int ismalloc)
 			free(envp[i]);
 	}
 	res[i] = 0;
-	res[i + 1] = 0;
 	if (ismalloc == 1)
 		free(envp);
 	return (res);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:02:34 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:04:59 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,5 +162,7 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 			//g_success = 2;
 	free(exec.link);
 	free(exec.pid);
+	printf("Success: %d\n", g_success);
+	ft_cmdfree(cmd_lst);
 	return (envp);
 }
