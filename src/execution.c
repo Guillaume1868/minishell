@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:04:59 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:44:35 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 		if ((t_list *)exec->tmp->next != 0)
 			tmp = (char *)((t_list *)exec->tmp->next)->content;
+		exec->cmd_lst_tofree = &cmd_lst;
 		if (exec->nbr_pipes == 0)
 			envptmp = check_builtin((char *)exec->tmp->content, tmp,
 					envp, exec);

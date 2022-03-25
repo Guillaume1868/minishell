@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:01:34 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:41:10 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ typedef struct s_exec
 	int			nbr_pipes;
 	int			counter;
 	t_list		*tmp;
+	t_list		**cmd_lst_tofree;
 	pid_t		*pid;
 }				t_exec;
 

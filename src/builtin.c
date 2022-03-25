@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:01:53 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:00:14 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:42:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,28 @@ int	ft_cd(char *args, char **envp)
 	return (1);
 }
 
-int	ft_help(char **envp, t_exec *exec)
+void	ft_help(void)
+{
+	printf("HELP OF MINISHELL\nThe following are built in: cd help exit\n"
+		"Use the man command for information on other programs.\n");
+	g_success = 0;
+}
+
+int	ft_exit(char **envp, t_exec *exec)
 {
 	int	i;
 
 	i = -1;
-	printf("HELP OF MINISHELL\nThe following are built in: cd help exit\n"
-		"Use the man command for information on other programs.\n");
+	ft_putstr_fd("exit\n", 1);
 	while (envp[++i])
 		free(envp[i]);
+	ft_cmdfree(*exec->cmd_lst_tofree);
 	free(envp);
 	free(exec->link);
 	free(exec->pid);
 	g_success = 0;
-	return (1);
-}
-
-void	ft_exit(void)
-{
-	ft_putstr_fd("exit\n", 1);
-	g_success = 0;
 	exit(0);
+	return (0);
 }
 
 void	ft_env(char	**envp)
