@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 13:43:52 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 14:11:44 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ typedef struct s_params
 	t_cmd		*cmd;
 	t_list		*c;
 }	t_params;
-
-
 
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 13:13:01 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 14:13:48 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ setvbuf(stdout, NULL, _IONBF, 0);
 	{
 		if (line[0] != '\0')
 		{
+			g_success = 1;
 			add_history(line);
 			cmd_lst = parse(line, envp);
 			//ft_lstiter(cmd_lst, print_cmd);
