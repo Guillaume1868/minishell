@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 13:59:10 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/14 10:25:10 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:55:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,16 @@ int	is_seperator(char c)
 	if (c == ' ' | c == '<' | c == '>' | c == ';' | c == '|')
 		return (1);
 	return (0);
+}
+
+void	env_cnt_short(int *del, int *add)
+{
+	char	*tmp;
+
+	tmp = ft_itoa(g_success);
+	*del += 2;
+	*add += ft_strlen(tmp) + 1;
+	free(tmp);
 }
 
 void	env_cnt(char *line, int *add, int *del, char **envp)
@@ -30,10 +40,16 @@ void	env_cnt(char *line, int *add, int *del, char **envp)
 	{
 		if (quotes(line[i], &q) && !(q == line[i]))
 		{
-			if (line[i] == '$' && (q == '\"' || q == '0'))
+			if (line[i] == '$' && (q == '\"' || q == '0')
+				&& (ft_isalnum(line[i + 1]) || line[i + 1] == '_'))
 			{
 				*del += ft_strlen_env(&line[i + 1]) + 1;
 				*add += ft_strlen(get_env_2(&line[i + 1], envp));
+			}
+			else if (line[i] == '$' && (q == '\"' || q == '0')
+				&& line[i + 1] == '?')
+			{
+				env_cnt_short(del, add);
 			}
 		}
 		i = i + 1;

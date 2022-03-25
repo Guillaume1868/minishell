@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 10:28:52 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:43:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@
 
 enum e_type{out, append_out, in, delim_in};
 
+int	g_success;
+
 typedef struct s_redir
 {
 	int			type;
@@ -59,6 +61,8 @@ typedef struct s_params
 	t_cmd		*cmd;
 	t_list		*c;
 }	t_params;
+
+
 
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);
