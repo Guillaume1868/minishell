@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/24 14:04:21 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:13:01 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,14 @@ int	main(int argc, char **argv, char **envp)
 	char		*path;
 	int			i;
 
+setvbuf(stdout, NULL, _IONBF, 0);
+
 	ft_short();
 	path = NULL;
 	if (argc == 2)
 	{
 		cmd_lst = parse(argv[1], envp);
-		ft_lstiter(cmd_lst, print_cmd);
+		//ft_lstiter(cmd_lst, print_cmd);
 		ft_cmdfree(cmd_lst);
 		exit (0);
 	}
@@ -108,7 +110,7 @@ int	main(int argc, char **argv, char **envp)
 		{
 			add_history(line);
 			cmd_lst = parse(line, envp);
-			ft_lstiter(cmd_lst, print_cmd);
+			//ft_lstiter(cmd_lst, print_cmd);
 			//path = get_executable_path(&line[0], envp);
 			if (((t_cmd *)cmd_lst->content)->args != 0)
 				envp = execute_program(path, cmd_lst, envp);
