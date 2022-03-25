@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 16:58:16 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 18:27:55 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,9 @@ int	main(int argc, char **argv, char **envp)
 	while (envp[i])
 		i++;
 	envp = recreate_envp(envp, i, 0);
-	g_success = 1;
+	if (envp == 0)
+		exit(1);
+	g_success = 2;
 	if (argc == 2)
 	{
 		cmd_lst = parse(argv[1], envp);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:05:13 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:58:36 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	**check_builtin(char *cmd, char *args, char **envp, t_exec *exec)
 	else if (ft_strncmp(cmd, "export", 7) == 0)
 		envp = ft_export(envp, args);
 	else if (ft_strncmp(cmd, "unset", 6) == 0)
-		envp = ft_unset(envp, args);
+		envp = ft_unset(envp, args, exec);
 	else
 		return (0);
 	return (envp);
@@ -48,6 +48,12 @@ char	**recreate_envp(char **envp, int len, int ismalloc)
 	int		i;
 
 	res = malloc(sizeof(char *) * (len + 1));
+	if (res == 0)
+	{
+		if (ismalloc == 1)
+			free_envp(envp);
+		return (0);
+	}
 	i = -1;
 	while (envp[++i])
 	{

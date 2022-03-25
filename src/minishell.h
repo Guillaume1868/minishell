@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:41:10 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 18:03:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void			rl_replace_line(const char *fuck, int c);
 //main.c
 void			pwd(void);
 void			ft_echo(char **args);
+void			free_envp(char **envp);
 
 typedef struct s_shell {
 	pid_t			id;
@@ -121,7 +122,8 @@ void			change_pip(int *pip, int i, t_exec *exec);
 
 //execution.c
 char			**execute_program(char *path, t_list *args, char **envp);
-void			child_program(t_list *cmd_lst, t_exec *exec, int i);
+void			child_program(t_list *cmd_lst, t_exec *exec, int i,
+					char **envp);
 void			pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp,
 					char *tmp);
 char			**itering_prog(char *path, t_list *cmd_lst, t_exec *exec,
@@ -130,7 +132,7 @@ char			**itering_prog(char *path, t_list *cmd_lst, t_exec *exec,
 //functions.c
 char			**ft_export(char **envp, char *args);
 char			**make_export(char **envp, char *args, char *tmp, int i);
-char			**ft_unset(char **envp, char *args);
+char			**ft_unset(char **envp, char *args, t_exec *exec);
 char			*ft_strjoinfree(char *s1, char *s2);
 
 //functions2.c

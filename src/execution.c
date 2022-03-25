@@ -6,13 +6,13 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:44:35 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 18:40:50 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	child_program(t_list *cmd_lst, t_exec *exec, int i)
+void	child_program(t_list *cmd_lst, t_exec *exec, int i, char **envp)
 {
 	int		j;
 
@@ -25,6 +25,11 @@ void	child_program(t_list *cmd_lst, t_exec *exec, int i)
 	}
 	exec->args = malloc(sizeof(char *) * (j + 1));
 	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+	if (exec->args == 0 || exec->tmp == 0)
+	{
+		exec->cmd_lst_tofree = &cmd_lst;
+		ft_exit(envp, exec);
+	}
 	j = 0;
 	while (exec->tmp)
 	{
@@ -70,7 +75,7 @@ void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 	{
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 		exec->path = get_executable_path((char *)exec->tmp->content, envp);
-		child_program(cmd_lst, exec, exec->counter);
+		child_program(cmd_lst, exec, exec->counter, envp);
 		if (exec->path == 0 && (exec->args[0][0] == '/' || (exec->args[0][0]
 			== '.' && exec->args[0][1] == '/')))
 		{
@@ -141,6 +146,25 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 	return (envp);
 }
 
+void	wait_close_forks(t_exec *exec)
+{
+	int		i;
+	int		status;
+
+	i = -1;
+	while (++i < (2 * exec->nbr_pipes))
+		close(exec->link[i]);
+	i = -1;
+	while (++i < exec->nbr_pipes + 1)
+		waitpid(exec->pid[i], &status, 0);
+	if (WIFEXITED(status))
+		g_success = WIFEXITED(status);
+	else
+		g_success = 0;
+	free(exec->link);
+	free(exec->pid);
+}
+
 char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 {
 	t_exec	exec;
@@ -149,20 +173,17 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 	count_pipes(&exec, cmd_lst);
 	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
 	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));
+	if (exec.pid == 0 || exec.link == 0)
+	{
+		exec.cmd_lst_tofree = &cmd_lst;
+		ft_exit(envp, &exec);
+	}
 	i = -1;
 	while (++i < exec.nbr_pipes)
 		if (pipe(exec.link + i * 2) < 0)
 			exit(1);
 	envp = itering_prog(path, cmd_lst, &exec, envp);
-	i = -1;
-	while (++i < (2 * exec.nbr_pipes))
-		close(exec.link[i]);
-	i = -1;
-	while (++i < exec.nbr_pipes + 1)
-		printf("%d\n", waitpid(exec.pid[i], 0, 0));
-			//g_success = 2;
-	free(exec.link);
-	free(exec.pid);
+	wait_close_forks(&exec);
 	printf("Success: %d\n", g_success);
 	ft_cmdfree(cmd_lst);
 	return (envp);
