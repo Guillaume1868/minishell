@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 14:13:48 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 15:28:33 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,22 @@ void	ft_echo(char **args) //TODO: move dans builtin ?
 		printf("\n");
 	else if (!(args[1][0] == '-' && args[1][1] == 'n'))
 	{
-		while (args[1][i] == ' ')
-			i++;
-		printf("%s\n", args[1]);
+		//while (args[1][i] == ' ')
+		//	i++;
+		i++;
+		printf("%s", args[i++]);
+		while (args[i] != 0)
+			printf(" %s", args[i++]);
+		printf("\n");
 	}
 	else
 	{
 		i += 2;
-		while (args[2][i] == ' ')
-			i++;
-		printf("%s", args[2]);
+		//while (args[2][i] == ' ')
+		//	i++;
+		printf("%s", args[i++]);
+		while (args[i] != 0)
+			printf(" %s", args[i++]);
 	}
 }
 
