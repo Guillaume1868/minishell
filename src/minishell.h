@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 14:11:44 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:01:34 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include <unistd.h>
-# include "builtin.h"
 # include "../libft/libft.h"
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -136,7 +135,15 @@ char			*ft_strjoinfree(char *s1, char *s2);
 //functions2.c
 char			**recreate_envp(char **envp, int i, int ismalloc);
 int				check_builtin_forked(char *cmd, char **args, char **envp);
-char			**check_builtin(char *cmd, char *args, char **envp);
+char			**check_builtin(char *cmd, char *args, char **envp,
+					t_exec *exec);
+
+//builtin.c
+int				ft_cd(char *args, char **envp);
+void			ft_help(void);
+int				ft_exit(char **envp, t_exec *exec);
+void			ft_env(char	**envp);
+
 //fill_word.c
 void			fill_word(char *res, char *line, char **envp, int *i);
 int				quotes(char c, char *quote);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 13:48:31 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:00:49 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	check_builtin_forked(char *cmd, char **args, char **envp)
 	return (1);
 }
 
-char	**check_builtin(char *cmd, char *args, char **envp)
+char	**check_builtin(char *cmd, char *args, char **envp, t_exec *exec)
 {
 	if (ft_strncmp(cmd, "cd", 3) == 0)
 		ft_cd(args, envp);
 	else if (ft_strncmp(cmd, "exit", 5) == 0)
-		ft_exit();
+		ft_exit(envp, exec);
 	else if (ft_strncmp(cmd, "export", 7) == 0)
 		envp = ft_export(envp, args);
 	else if (ft_strncmp(cmd, "unset", 6) == 0)

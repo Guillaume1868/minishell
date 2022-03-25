@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 15:05:40 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 17:02:34 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	pid_equal_zero2(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 	if (check_builtin_forked(exec->args[0], exec->args, envp) == 0)
 	{
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-		envptmp = check_builtin((char *)exec->tmp->content, tmp, envp);
+		envptmp = check_builtin((char *)exec->tmp->content, tmp, envp, exec);
 		if (exec->path && envptmp == 0)
 			execve(exec->path, exec->args, envp);
 		else if (exec->path == 0)
@@ -126,7 +126,8 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 		if ((t_list *)exec->tmp->next != 0)
 			tmp = (char *)((t_list *)exec->tmp->next)->content;
 		if (exec->nbr_pipes == 0)
-			envptmp = check_builtin((char *)exec->tmp->content, tmp, envp);
+			envptmp = check_builtin((char *)exec->tmp->content, tmp,
+					envp, exec);
 		exec->counter = i;
 		exec->path = path;
 		if (envptmp == 0)
@@ -157,9 +158,9 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 		close(exec.link[i]);
 	i = -1;
 	while (++i < exec.nbr_pipes + 1)
-		waitpid(exec.pid[i], 0, 0);
+		printf("%d\n", waitpid(exec.pid[i], 0, 0));
+			//g_success = 2;
 	free(exec.link);
 	free(exec.pid);
-	printf("Success: %d\n", g_success);
 	return (envp);
 }
