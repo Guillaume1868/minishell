@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 13:39:31 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:43:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,7 @@ typedef struct s_params
 	t_list		*c;
 }	t_params;
 
-typedef struct s_loop
-{
-	char		**envp;
-	char		*line;
-	char		*res;
-	int			*i;
-	int			j;
-	char		q;
-}	t_loop;
+
 
 // wtf ?
 void			rl_replace_line(const char *fuck, int c);
@@ -96,9 +88,6 @@ char			*get_executable_path(char *name, char **envp);
 int				is_seperator(char c);
 char			*malloc_word(char *start, char *end);
 char			*get_word(char *line, int *i, char *quote, char **envp);
-
-//parse_utils2.c
-void			short_count(int *del, int *add);
 
 //parse.c
 t_list			*parse(char *line, char **envp);

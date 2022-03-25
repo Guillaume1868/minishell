@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 13:59:10 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 13:41:44 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/25 13:55:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,20 @@ int	is_seperator(char c)
 	return (0);
 }
 
+void	env_cnt_short(int *del, int *add)
+{
+	char	*tmp;
+
+	tmp = ft_itoa(g_success);
+	*del += 2;
+	*add += ft_strlen(tmp) + 1;
+	free(tmp);
+}
+
 void	env_cnt(char *line, int *add, int *del, char **envp)
 {
 	int		i;
 	char	q;
-	char	*tmp;
 
 	i = 0;
 	q = '0';
@@ -40,10 +49,7 @@ void	env_cnt(char *line, int *add, int *del, char **envp)
 			else if (line[i] == '$' && (q == '\"' || q == '0')
 				&& line[i + 1] == '?')
 			{
-				tmp = ft_itoa(g_success);
-				*del += 2;
-				*add += ft_strlen(tmp) + 1;
-				free(tmp);
+				env_cnt_short(del, add);
 			}
 		}
 		i = i + 1;
