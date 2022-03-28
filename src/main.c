@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 10:41:04 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 11:10:35 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,48 +32,13 @@ void	handle_signals(int signo)
 	}
 }
 
-void	pwd(void) //TODO: move dans builtin ?
-{
-	char	dir[PATH_MAX];
-
-	g_success = 0;
-	if (getcwd(dir, sizeof(dir)) != NULL)
-		printf("%s\n", dir);
-	else
-		perror("pwd() error");
-}
-
 void	disp_next_prompt(char **line)
 {
 	free(*line);
 	*line = readline ("\033[36;1m$>\033[0m");
 }
 
-void	ft_echo(char **args) //TODO: move dans builtin ?
-{
-	int		i;
-
-	i = 0;
-	if (args[1] == 0)
-		printf("\n");
-	else if (!(args[1][0] == '-' && args[1][1] == 'n'))
-	{
-		i++;
-		printf("%s", args[i++]);
-		while (args[i] != 0)
-			printf(" %s", args[i++]);
-		printf("\n");
-	}
-	else
-	{
-		i += 2;
-		printf("%s", args[i++]);
-		while (args[i] != 0)
-			printf(" %s", args[i++]);
-	}
-}
-
-void	ft_short()
+void	ft_short(void)
 {
 	struct termios	attributes;
 
@@ -86,7 +51,7 @@ void	ft_short()
 		printf("failed to register interrupts with kernel\n");
 }
 
-void free_envp(char **envp)
+void	free_envp(char **envp)
 {
 	int	i;
 

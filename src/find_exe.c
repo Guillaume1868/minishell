@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/02 11:41:07 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/24 14:56:02 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 11:12:42 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static char	*build_path(char *path, char *name)
 		return (NULL);
 	path_size = ft_strlen(path);
 	name_size = ft_strlen(name);
-	res = malloc(path_size + name_size + 2);  // TODO: protect return null
+	res = malloc(path_size + name_size + 2);
 	if (!res)
 		return (NULL);
 	ft_memcpy(res, path, path_size);

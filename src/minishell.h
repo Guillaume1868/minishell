@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 10:39:16 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 11:00:53 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ typedef struct s_params
 void			rl_replace_line(const char *fuck, int c);
 
 //main.c
-void			pwd(void);
-void			ft_echo(char **args);
 void			free_envp(char **envp);
 
 typedef struct s_shell {
@@ -149,6 +147,10 @@ int				ft_cd(char *args, char **envp);
 void			ft_help(void);
 int				ft_exit(char **envp, t_exec *exec);
 void			ft_env(char	**envp);
+
+//builtin2.c
+void			pwd(void);
+void			ft_echo(char **args);
 
 //fill_word.c
 void			fill_word(char *res, char *line, char **envp, int *i);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 10:37:30 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 10:39:23 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 10:58:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ void	child_program(t_list *cmd_lst, t_exec *exec, int i, char **envp)
 		j++;
 	}
 	exec->args = malloc(sizeof(char *) * (j + 1));
-	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-	if (exec->args == 0 || exec->tmp == 0)
+	if (exec->args == 0)
 	{
 		exec->cmd_lst_tofree = &cmd_lst;
 		ft_exit(envp, exec);
 	}
+	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 	j = 0;
 	while (exec->tmp)
 	{
