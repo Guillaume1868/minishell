@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/07 13:59:10 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 13:55:21 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 11:29:32 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,17 +85,4 @@ char	*calloc_word(char *line, char **envp)
 	env_cnt(line, &add, &del, envp);
 	count = char_cnt(line);
 	return (ft_calloc(sizeof(char), count + add - del + 1));
-}
-
-char	*get_word(char *line, int *i, char *quote, char **envp)
-{
-	char	*res;
-
-	(void) quote;
-	res = calloc_word(&line[*i], envp);
-	if (!res)
-		return (NULL);
-	fill_word(res, line, envp, i);
-	*quote = '0';
-	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 11:00:53 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 11:26:43 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,9 @@ char			*get_executable_path(char *name, char **envp);
 //parse_utils.c
 int				is_seperator(char c);
 char			*malloc_word(char *start, char *end);
+char			*calloc_word(char *line, char **envp);
+
+//parse_utils2.c
 char			*get_word(char *line, int *i, char *quote, char **envp);
 
 //parse.c

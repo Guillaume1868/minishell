@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 11:10:35 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 11:46:38 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,18 @@ void	handle_signals(int signo)
 
 void	disp_next_prompt(char **line)
 {
+	if (g_success == 131)
+		write(1, "\033[2K\033[1G", 8);
 	free(*line);
 	*line = readline ("\033[36;1m$>\033[0m");
 }
 
-void	ft_short(void)
+void	ft_short(int argc, char **argv)
 {
 	struct termios	attributes;
 
+	(void)argc;
+	(void)argv;
 	tcgetattr(STDIN_FILENO, &attributes);
 	attributes.c_lflag &= ~ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
@@ -68,26 +72,15 @@ int	main(int argc, char **argv, char **envp)
 {
 	char		*line;
 	t_list		*cmd_lst;
-	char		*path;
 	int			i;
 
-	ft_short();
-	path = NULL;
+	ft_short(argc, argv);
 	i = 0;
 	while (envp[i])
 		i++;
 	envp = recreate_envp(envp, i, 0);
 	if (envp == 0)
 		exit(1);
-	if (argc == 2)
-	{
-		cmd_lst = parse(argv[1], envp);
-		if (((t_cmd *)cmd_lst->content)->args != 0)
-			execute_program(path, cmd_lst, envp);
-		//ft_cmdfree(cmd_lst);
-		free_envp(envp);
-		exit (0);
-	}
 	g_success = 0;
 	line = readline ("\033[36;1m$>\033[0m");
 	while (line != NULL)
@@ -97,7 +90,7 @@ int	main(int argc, char **argv, char **envp)
 			add_history(line);
 			cmd_lst = parse(line, envp);
 			if (((t_cmd *)cmd_lst->content)->args != 0)
-				envp = execute_program(path, cmd_lst, envp);
+				envp = execute_program(0, cmd_lst, envp);
 		}
 		disp_next_prompt(&line);
 	}

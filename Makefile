@@ -1,7 +1,7 @@
 NAME 	=	minishell
 
 FILES	=	main builtin env find_exe parse parse_utils debug fill_word free \
-			free2 parse2 file_edit functions function2 execution execution2 builtin2
+			free2 parse2 file_edit functions function2 execution execution2 builtin2 parse_utils2
 
 SRC		=	$(addprefix src/, $(FILES:$(FILE_EXTENSION)=.c))
 OBJ		= $(addprefix objs/, ${FILES:$(FILE_EXTENSION)=.o})
