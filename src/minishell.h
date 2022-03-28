@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 11:26:43 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 13:47:11 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,12 @@ void			std_redirect(t_list *cmd_lst, t_exec *exec, int i);
 
 //functions.c
 char			**ft_export(char **envp, char *args);
-char			**make_export(char **envp, char *args, char *tmp, int i);
 char			**ft_unset(char **envp, char *args, t_exec *exec);
 char			*ft_strjoinfree(char *s1, char *s2);
 
 //functions2.c
 char			**recreate_envp(char **envp, int i, int ismalloc);
+char			**make_export(char **envp, char *args, char *tmp, int i);
 int				check_builtin_forked(char *cmd, char **args, char **envp);
 char			**check_builtin(char *cmd, char *args, char **envp,
 					t_exec *exec);

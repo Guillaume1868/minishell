@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 17:58:36 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 13:46:54 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,32 @@ char	**recreate_envp(char **envp, int len, int ismalloc)
 	if (ismalloc == 1)
 		free(envp);
 	return (res);
+}
+
+char	**make_export(char **envp, char *args, char *tmp, int i)
+{
+	int	j;
+
+	j = 0;
+	if (envp[i])
+	{
+		while (envp[i][j] && envp[i][j] != '=')
+			j++;
+		tmp = ft_substr(envp[i], 0, j);
+		j = 0;
+		while (args[j] && args[j] != '=')
+			j++;
+		envp[i] = ft_strjoinfree(tmp, &args[j]);
+	}
+	else
+	{
+		i = 0;
+		while (envp[i])
+			i++;
+		i++;
+		envp = recreate_envp(envp, i, 1);
+		if (tmp)
+			envp[i - 1] = ft_strdup(args);
+	}
+	return (envp);
 }
