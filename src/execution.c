@@ -6,45 +6,11 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 18:40:50 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 10:41:03 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	child_program(t_list *cmd_lst, t_exec *exec, int i, char **envp)
-{
-	int		j;
-
-	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-	j = 0;
-	while (exec->tmp)
-	{
-		exec->tmp = exec->tmp->next;
-		j++;
-	}
-	exec->args = malloc(sizeof(char *) * (j + 1));
-	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-	if (exec->args == 0 || exec->tmp == 0)
-	{
-		exec->cmd_lst_tofree = &cmd_lst;
-		ft_exit(envp, exec);
-	}
-	j = 0;
-	while (exec->tmp)
-	{
-		exec->args[j] = (char *)exec->tmp->content;
-		exec->tmp = exec->tmp->next;
-		j++;
-	}
-	exec->args[j] = 0;
-	exec_stdin(cmd_lst, exec, i);
-	exec_stdout(cmd_lst, exec, i);
-	if (cmd_lst->next || ((t_cmd *)cmd_lst->content)->out_redir)
-		dup2(exec->link[i * 2 + 1], 1);
-	if (i != 0)
-		dup2(exec->link[(i - 1) * 2], 0);
-}
 
 void	pid_equal_zero2(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 {
@@ -76,13 +42,14 @@ void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
 		exec->path = get_executable_path((char *)exec->tmp->content, envp);
 		child_program(cmd_lst, exec, exec->counter, envp);
-		if (exec->path == 0 && (exec->args[0][0] == '/' || (exec->args[0][0]
-			== '.' && exec->args[0][1] == '/')))
+		if (exec->path == 0 && exec->args[0][0] == '/')
 		{
 			exec->path = ft_strdup(exec->args[0]);
 			free(exec->args[0]);
 			exec->args[0] = ft_strdup(ft_strrchr(exec->path, '/'));
 		}
+		else if (exec->args[0][0] == '.' && exec->args[0][1] == '/')
+			exec->path = ft_strdup(exec->args[0]);
 		pid_equal_zero2(cmd_lst, exec, envp, tmp);
 		j = -1;
 		while (exec->args[++j])
@@ -157,10 +124,8 @@ void	wait_close_forks(t_exec *exec)
 	i = -1;
 	while (++i < exec->nbr_pipes + 1)
 		waitpid(exec->pid[i], &status, 0);
-	if (WIFEXITED(status))
-		g_success = WIFEXITED(status);
-	else
-		g_success = 0;
+	if (WIFEXITED(status) && g_success == 0)
+		g_success = WEXITSTATUS(status);
 	free(exec->link);
 	free(exec->pid);
 }
@@ -184,7 +149,6 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 			exit(1);
 	envp = itering_prog(path, cmd_lst, &exec, envp);
 	wait_close_forks(&exec);
-	printf("Success: %d\n", g_success);
 	ft_cmdfree(cmd_lst);
 	return (envp);
 }

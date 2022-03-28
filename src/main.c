@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 18:27:55 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 10:41:04 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,13 @@ void	handle_signals(int signo)
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_success = 1;
 	}
 	if (signo == SIGQUIT)
 	{
 		rl_on_new_line();
 		rl_redisplay();
+		g_success = 128 + signo;
 	}
 }
 
@@ -112,7 +114,6 @@ int	main(int argc, char **argv, char **envp)
 	envp = recreate_envp(envp, i, 0);
 	if (envp == 0)
 		exit(1);
-	g_success = 2;
 	if (argc == 2)
 	{
 		cmd_lst = parse(argv[1], envp);
@@ -122,6 +123,7 @@ int	main(int argc, char **argv, char **envp)
 		free_envp(envp);
 		exit (0);
 	}
+	g_success = 0;
 	line = readline ("\033[36;1m$>\033[0m");
 	while (line != NULL)
 	{

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/25 18:03:52 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 10:39:16 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,12 +122,15 @@ void			change_pip(int *pip, int i, t_exec *exec);
 
 //execution.c
 char			**execute_program(char *path, t_list *args, char **envp);
-void			child_program(t_list *cmd_lst, t_exec *exec, int i,
-					char **envp);
 void			pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp,
 					char *tmp);
 char			**itering_prog(char *path, t_list *cmd_lst, t_exec *exec,
 					char **envp);
+
+//execution2.c
+void			child_program(t_list *cmd_lst, t_exec *exec, int i,
+					char **envp);
+void			std_redirect(t_list *cmd_lst, t_exec *exec, int i);
 
 //functions.c
 char			**ft_export(char **envp, char *args);
