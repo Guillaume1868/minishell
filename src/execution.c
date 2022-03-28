@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 10:41:03 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 14:05:19 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 	t_exec	exec;
 	int		i;
 
+	exec.path = path;
 	count_pipes(&exec, cmd_lst);
 	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
 	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));
