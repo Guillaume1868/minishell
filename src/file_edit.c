@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:41:27 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 16:07:21 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 17:30:38 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	exec_stdin(t_list *cmd_lst, t_exec *exec, int i)
 			close(exec->link[(i - 1) * 2]);
 			exec->link[(i - 1) * 2] = open(((t_redir *)exec->tmp->content)->str,
 					O_RDONLY);
+			if (exec->link[(i - 1) * 2] < 0)
+				printf("minishell: Permission denied: ");
 		}
 		else if (((t_redir *)exec->tmp->content)->type == 3)
 		{
@@ -44,6 +46,8 @@ void	exec_stdout(t_list *cmd_lst, t_exec *exec, int i)
 		else if (((t_redir *)exec->tmp->content)->type == 1)
 			exec->link[i * 2 + 1] = open(((t_redir *)exec->tmp->content)->str,
 					O_WRONLY | O_APPEND | O_CREAT, 0644);
+		if (exec->link[i * 2 + 1] < 0)
+			printf("minishell: Permission denied");
 	}
 }
 
