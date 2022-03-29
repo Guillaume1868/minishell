@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:38:11 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 13:47:49 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 16:19:04 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,10 @@ char	**make_unset(char **envp, char *args, char **res)
 			free(envp[i]);
 			i++;
 		}
+		else
+			free(envp[i]);
 		if (envp[i])
 			res[++j] = ft_strdup(envp[i]);
-		free(envp[i]);
 	}
 	res[++j] = 0;
 	res[++j] = 0;
