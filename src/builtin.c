@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:01:53 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 13:30:02 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 13:52:30 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	ft_cd(char *args, char **envp)
 		tmp = ft_substr(args, 0, i);
 		if (chdir(tmp) != 0)
 		{
-			g_success = 1;
+			g_success = 3;
 			printf("cd: %s: No such file or directory\n", args);
 		}
 		free(tmp);

@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 12:17:09 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 13:54:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ char	**check_builtin(char *cmd, char *args, char **envp, t_exec *exec)
 		if (exec->last_success == 0)
 		{
 			exec->last_success = g_success;
+			g_success = 2;
 		}
 		else
 			g_success = exec->last_success;
-		g_success = 2;
+		printf("last %d\n", exec->last_success);
 		return (0);
 	}
 	else

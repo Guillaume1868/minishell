@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 12:18:08 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 13:54:10 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,9 @@ void	wait_close_forks(t_exec *exec)
 		waitpid(exec->pid[i], &status, 0);
 	if (g_success == 2)
 		g_success = 0;
-	else if (exec->last_success == 0 && WIFEXITED(status))
+	else if (g_success == 3)
+		g_success = 1;
+	else if (WIFEXITED(status))
 		g_success = WEXITSTATUS(status);
 	free(exec->link);
 	free(exec->pid);
