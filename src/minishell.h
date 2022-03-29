@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 12:03:26 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 13:28:23 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ typedef struct s_exec
 	int			builtin;
 	int			last_success;
 	t_list		*tmp;
-	t_list		**cmd_lst_tofree;
+	t_list		*cmd_lst_tofree;
 	pid_t		*pid;
 }				t_exec;
 

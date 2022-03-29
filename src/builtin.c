@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 15:01:53 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 11:19:33 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 13:30:02 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int	ft_exit(char **envp, t_exec *exec)
 	i = -1;
 	ft_putstr_fd("exit\n", 1);
 	free_envp(envp);
-	if (*exec->cmd_lst_tofree)
-		ft_cmdfree(*exec->cmd_lst_tofree);
+	if (exec->cmd_lst_tofree)
+		ft_cmdfree(exec->cmd_lst_tofree);
 	if (exec->link)
 		free(exec->link);
 	if (exec->pid)
