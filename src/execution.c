@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 11:33:50 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 12:18:08 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 			printf("minishell: pipe error\n");
 			return (envp);
 		}
-		tmp = setup_exec(exec, i, cmd_lst, path);
+		tmp = setup_exec2(exec, i, cmd_lst, path);
 		if (exec->nbr_pipes == 0)
 			envtmp = check_builtin((char *)exec->tmp->content, tmp, envp, exec);
 		if (envtmp == 0)
@@ -126,7 +126,7 @@ void	wait_close_forks(t_exec *exec)
 		waitpid(exec->pid[i], &status, 0);
 	if (g_success == 2)
 		g_success = 0;
-	else if (exec->last_success != 0 && WIFEXITED(status))
+	else if (exec->last_success == 0 && WIFEXITED(status))
 		g_success = WEXITSTATUS(status);
 	free(exec->link);
 	free(exec->pid);
@@ -141,26 +141,17 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 		printf("failed to register interrupts with kernel\n");
 	if (signal(SIGQUIT, handle_signals2) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
-	exec.path = path;
-	exec.last_success = 0;
-	count_pipes(&exec, cmd_lst);
-	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
-	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));
-	if (exec.pid == 0 || exec.link == 0)
-	{
-		exec.cmd_lst_tofree = &cmd_lst;
-		ft_exit(envp, &exec);
-	}
 	i = -1;
+	setup_exec(path, cmd_lst, envp, &exec);
 	while (++i < exec.nbr_pipes)
 		if (pipe(exec.link + i * 2) < 0)
 			exit(1);
 	envp = itering_prog(path, cmd_lst, &exec, envp);
 	wait_close_forks(&exec);
 	ft_cmdfree(cmd_lst);
-	return (envp);
 	if (signal(SIGINT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
 	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
 		printf("failed to register interrupts with kernel\n");
+	return (envp);
 }

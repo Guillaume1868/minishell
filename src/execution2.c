@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 10:37:30 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 11:28:34 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 12:00:46 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	child_program(t_list *cmd_lst, t_exec *exec, int i, char **envp)
 	std_redirect(cmd_lst, exec, i);
 }
 
-char	*setup_exec(t_exec *exec, int i, t_list *cmd_lst, char *path)
+char	*setup_exec2(t_exec *exec, int i, t_list *cmd_lst, char *path)
 {
 	char	*tmp;
 
@@ -63,4 +63,18 @@ char	*setup_exec(t_exec *exec, int i, t_list *cmd_lst, char *path)
 	exec->path = path;
 	exec->counter = i;
 	return (tmp);
+}
+
+void	setup_exec(char *path, t_list *cmd_lst, char **envp, t_exec *exec)
+{
+	exec->path = path;
+	exec->last_success = 0;
+	count_pipes(exec, cmd_lst);
+	exec->pid = malloc(sizeof(int) * (exec->nbr_pipes + 1));
+	exec->link = malloc(sizeof(int) * (2 * exec->nbr_pipes));
+	if (exec->pid == 0 || exec->link == 0)
+	{
+		exec->cmd_lst_tofree = &cmd_lst;
+		ft_exit(envp, exec);
+	}
 }
