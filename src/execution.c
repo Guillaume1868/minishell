@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 13:54:10 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 14:28:38 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void	pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp, char *tmp)
 			free(exec->args[0]);
 			exec->args[0] = ft_strdup(ft_strrchr(exec->path, '/'));
 		}
-		else if (exec->args[0][0] == '.' && exec->args[0][1] == '/')
+		else if ((exec->args[0][0] == '.' && exec->args[0][1] == '/')
+			|| ft_strchr(exec->args[0], '/') != 0)
 			exec->path = ft_strdup(exec->args[0]);
 		pid_equal_zero2(cmd_lst, exec, envp, tmp);
 		j = -1;
