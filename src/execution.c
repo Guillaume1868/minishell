@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 11:28:42 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 11:33:50 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,6 +137,10 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 	t_exec	exec;
 	int		i;
 
+	if (signal(SIGINT, handle_signals2) == SIG_ERR)
+		printf("failed to register interrupts with kernel\n");
+	if (signal(SIGQUIT, handle_signals2) == SIG_ERR)
+		printf("failed to register interrupts with kernel\n");
 	exec.path = path;
 	exec.last_success = 0;
 	count_pipes(&exec, cmd_lst);
@@ -155,4 +159,8 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 	wait_close_forks(&exec);
 	ft_cmdfree(cmd_lst);
 	return (envp);
+	if (signal(SIGINT, handle_signals) == SIG_ERR)
+		printf("failed to register interrupts with kernel\n");
+	if (signal(SIGQUIT, handle_signals) == SIG_ERR)
+		printf("failed to register interrupts with kernel\n");
 }

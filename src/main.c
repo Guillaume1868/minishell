@@ -6,31 +6,12 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:00:58 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 11:46:38 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 15:52:24 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <termios.h>
-
-void	handle_signals(int signo)
-{
-	if (signo == SIGINT)
-	{
-		write(1, "\b\b  ", 1);
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-		g_success = 1;
-	}
-	if (signo == SIGQUIT)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-		g_success = 128 + signo;
-	}
-}
 
 void	disp_next_prompt(char **line)
 {

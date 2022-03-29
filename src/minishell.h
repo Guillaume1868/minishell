@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 11:28:15 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 11:34:04 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,10 @@ void			rl_replace_line(const char *fuck, int c);
 
 //main.c
 void			free_envp(char **envp);
+
+//handle_signals.c
+void			handle_signals(int signo);
+void			handle_signals2(int signo);
 
 typedef struct s_shell {
 	pid_t			id;
