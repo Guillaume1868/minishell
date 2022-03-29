@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:41:27 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/23 10:55:12 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 14:36:57 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	exec_stdin(t_list *cmd_lst, t_exec *exec, int i)
 		else if (((t_redir *)exec->tmp->content)->type == 3)
 		{
 			ft_heredoc(exec->tmp, exec, i);
-			if (exec->nbr_pipes == 0)
+			if (exec->nbr_pipes == 0 && exec->counter != 0)
 				exec->nbr_pipes++;
 		}
 	}
