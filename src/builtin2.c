@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 10:59:47 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 11:01:31 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/28 16:24:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	pwd(void)
 {
 	char	dir[PATH_MAX];
 
-	g_success = 0;
+	g_success = 2;
 	if (getcwd(dir, sizeof(dir)) != NULL)
 		printf("%s\n", dir);
 	else
@@ -28,6 +28,7 @@ void	ft_echo(char **args)
 	int		i;
 
 	i = 0;
+	g_success = 2;
 	if (args[1] == 0)
 		printf("\n");
 	else if (!(args[1][0] == '-' && args[1][1] == 'n'))

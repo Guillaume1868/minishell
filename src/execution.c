@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 10:53:56 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 14:05:19 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 11:28:42 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,25 +88,25 @@ char	**itering_prog(char *path, t_list *cmd_lst, t_exec *exec, char **envp)
 {
 	int		i;
 	char	*tmp;
-	char	**envptmp;
+	char	**envtmp;
 
 	i = 0;
+	envtmp = 0;
 	while (cmd_lst)
 	{
-		tmp = 0;
-		exec->tmp = ((t_cmd *)cmd_lst->content)->args;
-		if ((t_list *)exec->tmp->next != 0)
-			tmp = (char *)((t_list *)exec->tmp->next)->content;
-		exec->cmd_lst_tofree = &cmd_lst;
+		if (((t_cmd *)cmd_lst->content)->args == 0)
+		{
+			g_success = 1;
+			printf("minishell: pipe error\n");
+			return (envp);
+		}
+		tmp = setup_exec(exec, i, cmd_lst, path);
 		if (exec->nbr_pipes == 0)
-			envptmp = check_builtin((char *)exec->tmp->content, tmp,
-					envp, exec);
-		exec->counter = i;
-		exec->path = path;
-		if (envptmp == 0)
+			envtmp = check_builtin((char *)exec->tmp->content, tmp, envp, exec);
+		if (envtmp == 0)
 			pid_equal_zero(cmd_lst, exec, envp, tmp);
 		else
-			envp = envptmp;
+			envp = envtmp;
 		i++;
 		cmd_lst = cmd_lst->next;
 	}
@@ -124,7 +124,9 @@ void	wait_close_forks(t_exec *exec)
 	i = -1;
 	while (++i < exec->nbr_pipes + 1)
 		waitpid(exec->pid[i], &status, 0);
-	if (WIFEXITED(status) && g_success == 0)
+	if (g_success == 2)
+		g_success = 0;
+	else if (exec->last_success != 0 && WIFEXITED(status))
 		g_success = WEXITSTATUS(status);
 	free(exec->link);
 	free(exec->pid);
@@ -136,6 +138,7 @@ char	**execute_program(char *path, t_list *cmd_lst, char **envp)
 	int		i;
 
 	exec.path = path;
+	exec.last_success = 0;
 	count_pipes(&exec, cmd_lst);
 	exec.pid = malloc(sizeof(int) * (exec.nbr_pipes + 1));
 	exec.link = malloc(sizeof(int) * (2 * exec.nbr_pipes));

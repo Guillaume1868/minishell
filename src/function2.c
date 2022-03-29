@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 13:46:54 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 11:21:52 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ char	**check_builtin(char *cmd, char *args, char **envp, t_exec *exec)
 		envp = ft_export(envp, args);
 	else if (ft_strncmp(cmd, "unset", 6) == 0)
 		envp = ft_unset(envp, args, exec);
+	else if (ft_strncmp(cmd, "echo", 5) == 0 || ft_strncmp(cmd, "help", 5)
+		== 0 || ft_strncmp(cmd, "env", 4) == 0 || ft_strncmp(cmd, "pwd", 4)
+		== 0)
+	{
+		if (exec->last_success == 0)
+			exec->last_success = g_success;
+		g_success = 2;
+		return (0);
+	}
 	else
 		return (0);
 	return (envp);

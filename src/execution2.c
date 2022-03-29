@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 10:37:30 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 10:58:52 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 11:28:34 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,18 @@ void	child_program(t_list *cmd_lst, t_exec *exec, int i, char **envp)
 	}
 	exec->args[j] = 0;
 	std_redirect(cmd_lst, exec, i);
+}
+
+char	*setup_exec(t_exec *exec, int i, t_list *cmd_lst, char *path)
+{
+	char	*tmp;
+
+	tmp = 0;
+	exec->tmp = ((t_cmd *)cmd_lst->content)->args;
+	if ((t_list *)exec->tmp->next != 0)
+		tmp = (char *)((t_list *)exec->tmp->next)->content;
+	exec->cmd_lst_tofree = &cmd_lst;
+	exec->path = path;
+	exec->counter = i;
+	return (tmp);
 }

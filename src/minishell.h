@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 13:04:23 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 13:47:11 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 11:28:15 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ typedef struct s_exec
 	int			*link;
 	int			nbr_pipes;
 	int			counter;
+	int			builtin;
+	int			last_success;
 	t_list		*tmp;
 	t_list		**cmd_lst_tofree;
 	pid_t		*pid;
@@ -127,6 +129,7 @@ void			pid_equal_zero(t_list *cmd_lst, t_exec *exec, char	**envp,
 					char *tmp);
 char			**itering_prog(char *path, t_list *cmd_lst, t_exec *exec,
 					char **envp);
+char			*setup_exec(t_exec *exec, int i, t_list *cmd_lst, char *path);
 
 //execution2.c
 void			child_program(t_list *cmd_lst, t_exec *exec, int i,
