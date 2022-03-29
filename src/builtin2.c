@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/28 10:59:47 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/28 16:24:21 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 13:22:58 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_echo(char **args)
 	g_success = 2;
 	if (args[1] == 0)
 		printf("\n");
-	else if (!(args[1][0] == '-' && args[1][1] == 'n'))
+	else if (!(args[1][0] == '-' && args[1][1] == 'n' && args[1][2] == 0))
 	{
 		i++;
 		printf("%s", args[i++]);
