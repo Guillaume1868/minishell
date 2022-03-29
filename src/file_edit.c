@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 16:41:27 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 14:36:57 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 16:07:21 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ void	ft_heredoc(t_list *tmp, t_exec *exec, int i)
 	line = readline(">");
 	while (1)
 	{
-		if (signal(SIGQUIT, exit) == SIG_ERR)
-			printf("failed to register interrupts with kernel\n");
 		if (line[0] != '\0')
 		{
 			if (ft_strncmp(((t_redir *)tmp->content)->str, line,
