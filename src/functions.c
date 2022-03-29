@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/04 12:38:11 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 16:19:04 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 16:51:13 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,13 @@ char	**make_unset(char **envp, char *args, char **res)
 	{
 		tmp = ft_strchr(envp[i], '=');
 		if (ft_strncmp(envp[i], args, ft_strlen(envp[i]) - ft_strlen(tmp)) == 0)
-		{
-			free(envp[i]);
 			i++;
-		}
 		else
-			free(envp[i]);
-		if (envp[i])
-			res[++j] = ft_strdup(envp[i]);
+		{
+			if (envp[i])
+				res[++j] = ft_strdup(envp[i]);
+		}
 	}
-	res[++j] = 0;
 	res[++j] = 0;
 	return (res);
 }
@@ -65,11 +62,11 @@ char	**ft_unset(char **envp, char *args, t_exec *exec)
 		return (envp);
 	while (envp[j])
 		j++;
-	res = malloc(sizeof(char *) * j + 1);
+	res = malloc(sizeof(char *) * (j + 1));
 	if (res == 0)
 		ft_exit(envp, exec);
 	res = make_unset(envp, args, res);
-	free(envp);
+	free_envp(envp);
 	return (res);
 }
 

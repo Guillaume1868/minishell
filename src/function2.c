@@ -6,7 +6,7 @@
 /*   By: gaubert <gaubert@student.42lausanne.ch>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 11:19:31 by gaubert           #+#    #+#             */
-/*   Updated: 2022/03/29 13:57:03 by gaubert          ###   ########.fr       */
+/*   Updated: 2022/03/29 17:07:45 by gaubert          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	**recreate_envp(char **envp, int len, int ismalloc)
 	char	**res;
 	int		i;
 
-	res = malloc(sizeof(char *) * (len + 1));
+	res = malloc(sizeof(char *) * (len + 2));
 	if (res == 0)
 	{
 		if (ismalloc == 1)
@@ -69,14 +69,10 @@ char	**recreate_envp(char **envp, int len, int ismalloc)
 	}
 	i = -1;
 	while (envp[++i])
-	{
 		res[i] = ft_strdup(envp[i]);
-		if (ismalloc == 1)
-			free(envp[i]);
-	}
-	res[i] = 0;
+	res[len + 1] = 0;
 	if (ismalloc == 1)
-		free(envp);
+		free_envp(envp);
 	return (res);
 }
 
@@ -104,6 +100,7 @@ char	**make_export(char **envp, char *args, char *tmp, int i)
 		envp = recreate_envp(envp, i, 1);
 		if (tmp)
 			envp[i - 1] = ft_strdup(args);
+		envp[i] = 0;
 	}
 	return (envp);
 }
